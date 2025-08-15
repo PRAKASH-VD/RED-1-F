@@ -8,9 +8,11 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       const res = await axios.post("http://localhost:3000/api/auth/login", {
         email,
@@ -22,6 +24,8 @@ const Login = () => {
       navigate(userData.role?.toLowerCase() === "admin" ? "/admin" : "/");
     } catch (error) {
       alert("Invalid Credentials");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,19 +43,22 @@ const Login = () => {
           type="email"
           placeholder="Enter your Email"
           className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="Enter Your Password"
           className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <button
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-300"
+          disabled={loading}
         >
-          Login
+          {loading ? "Loading..." : "Login"}
         </button>
 
         <p className="text-center text-sm text-gray-600 mt-4">
@@ -61,6 +68,14 @@ const Login = () => {
             className="text-blue-600 hover:underline font-medium"
           >
             Register
+          </a>
+        </p>
+        <p className="text-center text-sm text-gray-600 mt-2">
+          <a
+            href="/forgot-password"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Forgot Password?
           </a>
         </p>
       </form>

@@ -11,6 +11,8 @@ import Success from "./Pages/Success";
 import Cancel from "./Pages/Cancel";
 import NotFound from "./Pages/NotFound";
 import { AuthContext } from "./Context/AuthContext";
+import ForgotPassword from "./Pages/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword";
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -39,6 +41,9 @@ const App = () => {
         />
         <Route path="/success" element={<Success />} />
         <Route path="/cancel" element={<Cancel />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </>
