@@ -9,7 +9,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    // navigate("/login");
+    navigate("/login");
   };
 
   return (
@@ -19,7 +19,7 @@ const Navbar = () => {
           to="/"
           className="text-xl font-extrabold text-blue-600 tracking-wide"
         >
-          🛒 RED-1
+          🏠 RED-1 🏠
         </Link>
 
         <div className="flex space-x-6 items-center text-gray-700 font-medium">
