@@ -6,7 +6,7 @@ import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import Cart from "./Pages/Cart";
 import Booking from "./Pages/Booking";
-// import AdminDashboard from "./Admin/AdminDashboard";
+import AdminDashboard from "./Admin/AdminDashboard";
 import Success from "./Pages/Success";
 import Cancel from "./Pages/Cancel";
 import NotFound from "./Pages/NotFound";
