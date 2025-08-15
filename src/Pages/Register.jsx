@@ -12,6 +12,10 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+      if (!userData.name || !userData.email || !userData.password) {
+    alert("Please fill all fields");
+    return;
+  }
     try {
       await axios.post("http://localhost:3000/api/auth/register", userData);
       alert("Registration Successful please proceed to login");
