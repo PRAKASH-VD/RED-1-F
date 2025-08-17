@@ -159,10 +159,46 @@ const AdminDashboard = () => {
               />
               <input
                 type="text"
-                placeholder="Description"
-                value={newProperty.description}
+                placeholder="Size"
+                value={newProperty.size}
                 onChange={(e) =>
-                  setNewProperty({ ...newProperty, description: e.target.value })
+                  setNewProperty({ ...newProperty, size: e.target.value })
+                }
+                className="border p-2 rounded col-span-2"
+              />
+              <input
+                type="text"
+                placeholder="Rooms"
+                value={newProperty.rooms}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, rooms: e.target.value })
+                }
+                className="border p-2 rounded col-span-2"
+              />
+              <input
+                type="text"
+                placeholder="Location"
+                value={newProperty.location}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, location: e.target.value })
+                }
+                className="border p-2 rounded col-span-2"
+              />
+              <input
+                type="text"
+                placeholder="Description"
+                value={newProperty.descriptions}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, descriptions: e.target.value })
+                }
+                className="border p-2 rounded col-span-2"
+              />
+              <input
+                type="text"
+                placeholder="Image URL"
+                value={newProperty.image}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, image: e.target.value })
                 }
                 className="border p-2 rounded col-span-2"
               />
@@ -191,7 +227,7 @@ const AdminDashboard = () => {
                     setNewProperty({
                       name: "",
                       price: "",
-                      description: "",
+                      descriptions: "",
                       stock: "",
                     });
                   }}
@@ -222,8 +258,16 @@ const AdminDashboard = () => {
               >
                 <h3 className="text-lg font-semibold">{property.name}</h3>
                 <p className="text-blue-600 font-bold">${property.price}</p>
-                <p className="text-gray-700">{property.description}</p>
+                <p className="text-gray-700">{property.descriptions}</p>
                 <p className="text-gray-700">Stock: {property.stock}</p>
+                <p className="text-gray-700">Size: {property.size}</p>
+                <p className="text-gray-700">Rooms: {property.rooms}</p>
+                <p className="text-gray-700">Location: {property.location}</p>
+                <img
+                  src={property.image}
+                  alt={property.name}
+                  className="mt-2 w-full h-48 object-cover rounded"
+                />
                 <div className="mt-3">
                   <button
                     onClick={() => handleEdit(property)}
