@@ -262,8 +262,8 @@ const AdminDashboard = () => {
                   className="border p-2 mt-2 rounded w-full"
                 >
                   <option value="Pending">Pending</option>
-                  <option value="Shipped">Shipped</option>
-                  <option value="Delivered">Delivered</option>
+                  <option value="Shipped">Booked</option>
+                  <option value="Delivered">Buyed</option>
                   <option value="Cancelled">Cancelled</option>
                 </select>
               </div>
