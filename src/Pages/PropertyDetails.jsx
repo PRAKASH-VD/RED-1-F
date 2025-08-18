@@ -13,7 +13,7 @@ const PropertyDetails = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(()=> {
-    axios.get(`http://localhost:3000/api/properties/${id}`)
+    axios.get(`http://localhost:3000/api/properties/byid/${id}`)
       .then(res => setProperty(res.data.data))
       .catch(()=>{})
       .finally(()=>setLoading(false));
