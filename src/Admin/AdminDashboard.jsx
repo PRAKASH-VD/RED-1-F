@@ -10,11 +10,17 @@ const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newProperty, setNewProperty] = useState({
-    name: "",
-    price: "",
-    description: "",
-    stock: "",
-  });
+  name: "",
+  price: "",
+  descriptions: "",
+  stock: "",
+  type: "",
+  size: "",
+  rooms: "",
+  location: "",
+  image: "",
+});
+
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
@@ -51,8 +57,19 @@ const AdminDashboard = () => {
       })
       .then((res) => {
         setProperties([...properties, res.data]);
-        setNewProperty({ name: "", price: "", description: "", stock: "" });
-        alert("Properties Added Successfully");
+        setNewProperty({
+  name: "",
+  price: "",
+  descriptions: "",
+  stock: "",
+  type: "",
+  size: "",
+  rooms: "",
+  location: "",
+  image: "",
+});
+
+       alert("Properties Added Successfully");
         window.location.reload();
       })
       .catch(() => alert("Error in adding property"));
@@ -64,7 +81,7 @@ const AdminDashboard = () => {
     setNewProperty({
       name: property.name,
       price: property.price,
-      description: property.description,
+      descriptions: property.descriptions,
       stock: property.stock,
     });
   };
@@ -72,16 +89,31 @@ const AdminDashboard = () => {
   //edit property
   const handleUpdateProperty = async () => {
     await axios
-      .put(`http://localhost:3000/api/properties/update/${editId}`, newProperty, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
+      .put(
+        `http://localhost:3000/api/properties/update/${editId}`,
+        newProperty,
+        {
+          headers: { Authorization: `Bearer ${user.token}` },
+        }
+      )
       .then((res) => {
         const updated = properties.map((p) =>
           p._id === editId ? res.data.data : p
         );
         setProperties(updated);
         setEditId(null);
-        setNewProperty({ name: "", price: "", description: "", stock: "" });
+        setNewProperty({
+  name: "",
+  price: "",
+  descriptions: "",
+  stock: "",
+  type: "",
+  size: "",
+  rooms: "",
+  location: "",
+  image: "",
+});
+
         alert("Property Updated");
       })
       .catch(() => alert("Error in Updating property"));
@@ -168,6 +200,15 @@ const AdminDashboard = () => {
               />
               <input
                 type="text"
+                placeholder="Type"
+                value={newProperty.type}
+                onChange={(e) =>
+                  setNewProperty({ ...newProperty, type: e.target.value })
+                }
+                className="border p-2 rounded col-span-2"
+              />
+              <input
+                type="text"
                 placeholder="Rooms"
                 value={newProperty.rooms}
                 onChange={(e) =>
@@ -186,10 +227,13 @@ const AdminDashboard = () => {
               />
               <input
                 type="text"
-                placeholder="Description"
+                placeholder="Descriptions"
                 value={newProperty.descriptions}
                 onChange={(e) =>
-                  setNewProperty({ ...newProperty, descriptions: e.target.value })
+                  setNewProperty({
+                    ...newProperty,
+                    descriptions: e.target.value,
+                  })
                 }
                 className="border p-2 rounded col-span-2"
               />
@@ -287,7 +331,9 @@ const AdminDashboard = () => {
           </div>
 
           {/* booking */}
-          <h2 className="text-2xl font-semibold mb-4 text-gray-800">Bookings</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            Bookings
+          </h2>
           <div className="grid md:grid-cols-2 gap-5">
             {bookings.map((booking) => (
               <div

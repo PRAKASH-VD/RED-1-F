@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import Navbar from "./Components/Navbar";
+import Footer from "./Components/Footer"; 
 import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
@@ -13,40 +14,83 @@ import NotFound from "./Pages/NotFound";
 import { AuthContext } from "./Context/AuthContext";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
+import PropertyDetails from "./Pages/PropertyDetails";
+import AgentProfile from "./Pages/AgentProfile";
+import AgentDashboard from "./Pages/AgentDashboard";
+import Messages from "./Pages/Messages";
+import AdminReports from "./Pages/AdminReports";
 
 const App = () => {
   const { user } = useContext(AuthContext);
+
   useEffect(() => {
     console.log("User Data From AuthContext:", user);
   }, [user]);
+
   return (
-    <>
+    <div className="flex flex-col min-h-screen">
+      {/* Navbar */}
       <Navbar />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/booking" element={<Booking />} />
-        <Route
-          path="/admin"
-          element={
-            user && user.role?.toLowerCase() === "admin" ? (
-              <AdminDashboard />
-            ) : (
-              <Navigate to={"/"} />
-            )
-          }
-        />
-        <Route path="/success" element={<Success />} />
-        <Route path="/cancel" element={<Cancel />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/reset-password/:id/:token" element={<ResetPassword />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </>
+      {/* Main Content */}
+      <main className="flex-grow pt-16 px-4">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/booking" element={<Booking />} />
+          <Route
+            path="/admin"
+            element={
+              user && user.role?.toLowerCase() === "admin" ? (
+                <AdminDashboard />
+              ) : (
+                <Navigate to={"/"} />
+              )
+            }
+          />
+          <Route path="/property/:id" element={<PropertyDetails />} />
+          <Route path="/agent/:id" element={<AgentProfile />} />
+          <Route
+            path="/agent"
+            element={
+              user && user.role?.toLowerCase() === "agent" ? (
+                <AgentDashboard />
+              ) : (
+                <Navigate to={"/"} />
+              )
+            }
+          />
+          <Route
+            path="/admin/reports"
+            element={
+              user && user.role?.toLowerCase() === "admin" ? (
+                <AdminReports />
+              ) : (
+                <Navigate to={"/"} />
+              )
+            }
+          />
+          <Route
+            path="/messages"
+            element={user ? <Messages /> : <Navigate to={"/login"} />}
+          />
+          <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<Cancel />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route
+            path="/reset-password/:id/:token"
+            element={<ResetPassword />}
+          />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+
+      {/* Footer */}
+      <Footer />
+    </div>
   );
 };
 

@@ -1,69 +1,222 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
-  const isAdmin = user?.role?.toLowerCase() === "admin";
   const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+
+  const notifRef = useRef(null);
+  const dropdownRef = useRef(null);
 
   const handleLogout = () => {
     logout();
     navigate("/login");
   };
 
+  const role = user?.role?.toLowerCase();
+  const isAdmin = role === "admin";
+  const isAgent = role === "agent";
+  const isUser = role === "user";
+
+  // Dummy notifications (replace with API later)
+  const notifications = [
+    { id: 1, text: "New property listed near you!" },
+    { id: 2, text: "Your appointment has been confirmed." },
+    { id: 3, text: "Agent updated property details." },
+  ];
+  const unreadCount = notifications.length;
+
+  // User avatar initials
+  const getInitials = (name) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .map((n) => n[0].toUpperCase())
+      .join("");
+  };
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (notifRef.current && !notifRef.current.contains(e.target)) {
+        setNotifOpen(false);
+      }
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
+        setDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <nav className="bg-white shadow-md text-gray-800">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-        <Link
-          to="/"
-          className="text-xl font-extrabold text-blue-600 tracking-wide"
-        >
-          🏠 RED-1 🏠
+     <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50 h-16 flex items-center px-6">
+      <div className="flex justify-between items-center w-full">
+        {/* Logo */}
+        <Link to="/" className="text-xl font-bold text-blue-600 flex items-center gap-2">
+          <span role="img" aria-label="house">🏠</span> RED-1
         </Link>
 
-        <div className="flex space-x-6 items-center text-gray-700 font-medium">
+        {/* Hamburger button (mobile) */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden text-gray-700 focus:outline-none"
+          aria-label="Toggle menu"
+        >
+          {isOpen ? "✖" : "☰"}
+        </button>
+
+        {/* Menu items */}
+        <div
+          className={`${
+            isOpen ? "block space-y-3 mt-4" : "hidden"
+          } md:flex md:space-x-6 md:space-y-0 items-center text-gray-700 font-medium`}
+        >
           <Link to="/" className="hover:text-blue-600 transition duration-300">
             Home
           </Link>
 
+          {/* Admin Routes */}
           {isAdmin && (
-            <Link
-              to="/admin"
-              className="hover:text-blue-600 transition duration-300"
-            >
+            <Link to="/admin" className="hover:text-blue-600 transition duration-300">
               Admin Panel
             </Link>
           )}
 
-          {user && !isAdmin && (
-            <Link
-              to="/cart"
-              className="hover:text-blue-600 transition duration-300"
-            >
-              Cart
-            </Link>
+          {/* Agent Routes */}
+          {isAgent && (
+            <>
+              <Link to="/agent-dashboard" className="hover:text-blue-600 transition duration-300">
+                Dashboard
+              </Link>
+              <Link to="/agent-properties" className="hover:text-blue-600 transition duration-300">
+                My Listings
+              </Link>
+            </>
           )}
 
+          {/* User Routes */}
+          {isUser && (
+            <>
+              <Link to="/cart" className="hover:text-blue-600 transition duration-300">
+                Cart
+              </Link>
+              <Link to="/appointments" className="hover:text-blue-600 transition duration-300">
+                Appointments
+              </Link>
+            </>
+          )}
+
+          {/* Auth Buttons / Profile Dropdown */}
           {user ? (
-            <button
-              onClick={handleLogout}
-              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
-            >
-              Logout
-            </button>
+            <div className="flex items-center space-x-4 relative">
+              {/* Notifications */}
+              <div className="relative" ref={notifRef}>
+                <button
+                  onClick={() => setNotifOpen(!notifOpen)}
+                  className="relative text-gray-600 hover:text-blue-600 focus:outline-none"
+                  aria-label="Notifications"
+                >
+                  🔔
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5">
+                      {unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Notification Dropdown */}
+                {notifOpen && (
+                  <div className="absolute right-12 mt-2 w-64 bg-white rounded-md shadow-lg z-50 py-2 border">
+                    <p className="px-4 py-2 text-sm font-semibold text-gray-700 border-b">
+                      Notifications
+                    </p>
+                    {notifications.length > 0 ? (
+                      notifications.map((n) => (
+                        <p
+                          key={n.id}
+                          className="px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
+                        >
+                          {n.text}
+                        </p>
+                      ))
+                    ) : (
+                      <p className="px-4 py-2 text-sm text-gray-400">
+                        No new notifications
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Avatar Dropdown */}
+              <div className="relative inline-block text-left" ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold focus:outline-none"
+                  aria-label="User menu"
+                >
+                  {getInitials(user?.name || "User")}
+                </button>
+
+                {dropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 py-2 border">
+                    <p className="px-4 py-2 text-sm text-gray-600 border-b">
+                      {user?.name || "User"} <br />
+                      <span className="text-xs text-gray-400 capitalize">
+                        {role}
+                      </span>
+                    </p>
+
+                    {/* Role-specific dashboard */}
+                    {isAdmin && (
+                      <Link
+                        to="/admin"
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        Admin Dashboard
+                      </Link>
+                    )}
+                    {isAgent && (
+                      <Link
+                        to="/agent-dashboard"
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        Agent Dashboard
+                      </Link>
+                    )}
+                    {isUser && (
+                      <Link
+                        to="/profile"
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        My Profile
+                      </Link>
+                    )}
+
+                    <button
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
           ) : (
             <>
-              <Link
-                to="/login"
-                className="hover:text-blue-600 transition duration-300"
-              >
+              <Link to="/login" className="hover:text-blue-600 transition duration-300">
                 Login
               </Link>
-              <Link
-                to="/register"
-                className="hover:text-blue-600 transition duration-300"
-              >
+              <Link to="/register" className="hover:text-blue-600 transition duration-300">
                 Register
               </Link>
             </>
