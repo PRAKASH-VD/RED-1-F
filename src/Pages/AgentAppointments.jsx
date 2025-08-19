@@ -1,7 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../Context/AuthContext";
-import API_BASE_URL from "../api/apiBase";
+import API_BASE_URL from "../apiBase.js";
 
 
 const AgentAppointments = () => {
