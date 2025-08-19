@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import Navbar from "./Components/Navbar";
-import Footer from "./Components/Footer"; 
+import Footer from "./Components/Footer";
 import { Navigate, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
@@ -19,6 +19,7 @@ import AgentProfile from "./Pages/AgentProfile";
 import AgentDashboard from "./Pages/AgentDashboard";
 import Messages from "./Pages/Messages";
 import AdminReports from "./Pages/AdminReports";
+import CustomerAppointments from "./Pages/CustomerAppointments";
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -40,6 +41,8 @@ const App = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/booking" element={<Booking />} />
+          <Route path="/appointments" element={<CustomerAppointments />} />
+
           <Route
             path="/admin"
             element={
@@ -52,6 +55,16 @@ const App = () => {
           />
           <Route path="/property/:id" element={<PropertyDetails />} />
           <Route path="/agent/:id" element={<AgentProfile />} />
+          <Route
+            path="/agent/appointments"
+            element={
+              user && user.role?.toLowerCase() === "agent" ? (
+                <AgentAppointments />
+              ) : (
+                <Navigate to={"/"} />
+              )
+            }
+          />
           <Route
             path="/agent"
             element={

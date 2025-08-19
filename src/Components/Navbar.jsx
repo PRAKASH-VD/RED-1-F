@@ -54,11 +54,17 @@ const Navbar = () => {
   }, []);
 
   return (
-     <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50 h-16 flex items-center px-6">
+    <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50 h-16 flex items-center px-6">
       <div className="flex justify-between items-center w-full">
         {/* Logo */}
-        <Link to="/" className="text-xl font-bold text-blue-600 flex items-center gap-2">
-          <span role="img" aria-label="house">🏠</span> RED-1
+        <Link
+          to="/"
+          className="text-xl font-bold text-blue-600 flex items-center gap-2"
+        >
+          <span role="img" aria-label="house">
+            🏠
+          </span>{" "}
+          RED-1
         </Link>
 
         {/* Hamburger button (mobile) */}
@@ -82,7 +88,10 @@ const Navbar = () => {
 
           {/* Admin Routes */}
           {isAdmin && (
-            <Link to="/admin" className="hover:text-blue-600 transition duration-300">
+            <Link
+              to="/admin"
+              className="hover:text-blue-600 transition duration-300"
+            >
               Admin Panel
             </Link>
           )}
@@ -90,11 +99,23 @@ const Navbar = () => {
           {/* Agent Routes */}
           {isAgent && (
             <>
-              <Link to="/agent-dashboard" className="hover:text-blue-600 transition duration-300">
+              <Link
+                to="/agent-dashboard"
+                className="hover:text-blue-600 transition duration-300"
+              >
                 Dashboard
               </Link>
-              <Link to="/agent-properties" className="hover:text-blue-600 transition duration-300">
+              <Link
+                to="/agent-properties"
+                className="hover:text-blue-600 transition duration-300"
+              >
                 My Listings
+              </Link>
+              <Link
+                to="/agent/appointments"
+                className="hover:text-blue-600 transition duration-300"
+              >
+                Appointments
               </Link>
             </>
           )}
@@ -102,10 +123,16 @@ const Navbar = () => {
           {/* User Routes */}
           {isUser && (
             <>
-              <Link to="/cart" className="hover:text-blue-600 transition duration-300">
+              <Link
+                to="/cart"
+                className="hover:text-blue-600 transition duration-300"
+              >
                 Cart
               </Link>
-              <Link to="/appointments" className="hover:text-blue-600 transition duration-300">
+              <Link
+                to="/appointments"
+                className="hover:text-blue-600 transition duration-300"
+              >
                 Appointments
               </Link>
             </>
@@ -154,7 +181,10 @@ const Navbar = () => {
               </div>
 
               {/* Avatar Dropdown */}
-              <div className="relative inline-block text-left" ref={dropdownRef}>
+              <div
+                className="relative inline-block text-left"
+                ref={dropdownRef}
+              >
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold focus:outline-none"
@@ -213,10 +243,16 @@ const Navbar = () => {
             </div>
           ) : (
             <>
-              <Link to="/login" className="hover:text-blue-600 transition duration-300">
+              <Link
+                to="/login"
+                className="hover:text-blue-600 transition duration-300"
+              >
                 Login
               </Link>
-              <Link to="/register" className="hover:text-blue-600 transition duration-300">
+              <Link
+                to="/register"
+                className="hover:text-blue-600 transition duration-300"
+              >
                 Register
               </Link>
             </>
