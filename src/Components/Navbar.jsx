@@ -20,7 +20,7 @@ const Navbar = () => {
   const role = user?.role?.toLowerCase();
   const isAdmin = role === "admin";
   const isAgent = role === "agent";
-  const isUser = role === "user";
+  const isUser = role === "user" || role === "customer";
 
   // Dummy notifications (replace with API later)
   const notifications = [
