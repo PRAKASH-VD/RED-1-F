@@ -1,6 +1,8 @@
 import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { AuthContext } from "../Context/AuthContext";
+import API_BASE_URL from "../api/apiBase";
+
 
 const AgentAppointments = () => {
   const { user } = useContext(AuthContext);
@@ -11,7 +13,7 @@ const AgentAppointments = () => {
     const fetchAppointments = async () => {
       try {
         const { data } = await axios.get(
-          "https://red1-1-0-0.onrender.com/api/appointments/agent/my",
+         `${API_BASE_URL}/appointments/agent/my`,
           { withCredentials: true }
         );
         setAppointments(data.data);

@@ -22,6 +22,7 @@ import AdminReports from "./Pages/AdminReports";
 import CustomerAppointments from "./Pages/CustomerAppointments";
 import AgentAppointments from "./Pages/AgentAppointments";
 
+
 const App = () => {
   const { user } = useContext(AuthContext);
 
