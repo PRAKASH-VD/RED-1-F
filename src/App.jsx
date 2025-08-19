@@ -20,6 +20,7 @@ import AgentDashboard from "./Pages/AgentDashboard";
 import Messages from "./Pages/Messages";
 import AdminReports from "./Pages/AdminReports";
 import CustomerAppointments from "./Pages/CustomerAppointments";
+import AgentAppointments from "./Pages/AgentAppointments";
 
 const App = () => {
   const { user } = useContext(AuthContext);

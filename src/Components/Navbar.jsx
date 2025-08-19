@@ -98,27 +98,19 @@ const Navbar = () => {
 
           {/* Agent Routes */}
           {isAgent && (
-            <>
-              <Link
-                to="/agent-dashboard"
-                className="hover:text-blue-600 transition duration-300"
-              >
-                Dashboard
-              </Link>
-              <Link
-                to="/agent-properties"
-                className="hover:text-blue-600 transition duration-300"
-              >
-                My Listings
-              </Link>
-              <Link
-                to="/agent/appointments"
-                className="hover:text-blue-600 transition duration-300"
-              >
-                Appointments
-              </Link>
-            </>
-          )}
+  <>
+    <Link to="/agent" className="hover:text-blue-600 transition duration-300">
+      Dashboard
+    </Link>
+    <Link to="/agent/appointments" className="hover:text-blue-600 transition duration-300">
+      Appointments
+    </Link>
+    {/* Add this only if you actually have this route */}
+    {/* <Link to="/agent/properties" className="hover:text-blue-600 transition duration-300">
+      My Listings
+    </Link> */}
+  </>
+)}
 
           {/* User Routes */}
           {isUser && (
