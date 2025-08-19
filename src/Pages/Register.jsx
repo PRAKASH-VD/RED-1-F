@@ -17,7 +17,7 @@ const Register = () => {
     return;
   }
     try {
-      await axios.post("http://localhost:3000/api/auth/register", userData);
+      await axios.post("https://red1-1-0-0.onrender.com/api/auth/register", userData);
       alert("Registration Successful please proceed to login");
       navigate("/login");
     } catch (error) {

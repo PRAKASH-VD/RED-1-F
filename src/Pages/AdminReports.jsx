@@ -8,7 +8,7 @@ const AdminReports = () => {
 
   useEffect(()=> {
     const headers = { Authorization: `Bearer ${user.token}` };
-    axios.get("http://localhost:3000/api/admin/stats", { headers })
+    axios.get("https://red1-1-0-0.onrender.com/api/admin/stats", { headers })
       .then(res => setStats(res.data.data || {}))
       .catch(()=>{});
   }, [user]);

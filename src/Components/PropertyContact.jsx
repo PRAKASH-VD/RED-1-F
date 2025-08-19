@@ -19,7 +19,7 @@ const PropertyContact = ({ propertyId }) => {
     setStatus("");
     try {
       await axios.post(
-        "http://localhost:3000/api/inquiries",
+        "https://red1-1-0-0.onrender.com/api/inquiries",
         {
           property: propertyId,
           ...data,
