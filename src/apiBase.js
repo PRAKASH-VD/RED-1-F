@@ -1,7 +1,8 @@
-// Centralized API base URL
+import axios from "axios";
 
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
+const api = axios.create({
+  baseURL: "https://red1-1-0-0.onrender.com/api",
+  withCredentials: true,
+});
 
-// Export it for reuse
-export default API_BASE_URL;
+export default api;
