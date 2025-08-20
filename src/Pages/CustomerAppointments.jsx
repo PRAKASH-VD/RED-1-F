@@ -13,10 +13,10 @@ const CustomerAppointments = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await axios.get(
-          `${API_BASE_URL}/appointments/user/${user._id}`,
-          { withCredentials: true }
-        );
+        const res = await axios.get(`${API_BASE_URL}/appointments/mine`, { withCredentials: true });
+        if (res.data.status !== "success") {
+          throw new Error("Failed to fetch appointments");
+        }
         setAppointments(res.data.data);
       } catch (err) {
         console.error("Error fetching appointments:", err);
