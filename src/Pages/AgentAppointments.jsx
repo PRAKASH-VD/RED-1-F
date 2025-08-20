@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
-import api from "../apiBase.js";
+import axios from "axios";
 import { AuthContext } from "../Context/AuthContext";
+import API_BASE_URL from "../apiBase.js";
 
 
 const AgentAppointments = () => {
@@ -11,10 +12,11 @@ const AgentAppointments = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const { data } = await api.get("/appointments/agent/my", {
-          headers: { Authorization: `Bearer ${user?.token}` },
-        });
-        setAppointments(data.data || []);
+        const { data } = await axios.get(
+         `${API_BASE_URL}/appointments/agent/my`,
+          { withCredentials: true }
+        );
+        setAppointments(data.data);
       } catch (error) {
         console.error("Error fetching agent appointments:", error);
       } finally {
@@ -24,9 +26,6 @@ const AgentAppointments = () => {
 
     if (user?.role?.toLowerCase() === "agent") {
       fetchAppointments();
-    } else {
-      // not an agent -> stop loading and show access/no data
-      setLoading(false);
     }
   }, [user]);
 

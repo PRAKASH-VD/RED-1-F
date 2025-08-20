@@ -2,11 +2,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
-[build]
-  publish = "dist"
-  command = "npm run build"
-
-# NOTE: Do NOT commit secrets here. Set env vars in Netlify UI only if absolutely needed,
-# but avoid using VITE_* for secrets that get embedded into client bundles.
-# or inject a runtime script that assigns window.__API_BASE_URL before your app loads.
