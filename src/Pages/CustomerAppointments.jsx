@@ -1,9 +1,7 @@
 // src/pages/CustomerAppointments.jsx
 import { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import api from "../apiBase.js"; // ✅ axios instance
 import { AuthContext } from "../Context/AuthContext";
-import API_BASE_URL from "../apiBase.js"; 
-
 
 const CustomerAppointments = () => {
   const { user } = useContext(AuthContext);
@@ -12,16 +10,15 @@ const CustomerAppointments = () => {
 
   useEffect(() => {
     const fetchAppointments = async () => {
-  try {
-    const res = await axios.get(`${API_BASE_URL}/appointments/my`, { withCredentials: true });
-    setAppointments(res.data.data);
-  } catch (err) {
-    console.error("Error fetching appointments:", err);
-  } finally {
-    setLoading(false);
-  }
-};
-
+      try {
+        const res = await api.get("/appointments/my"); // ✅ matches backend
+        setAppointments(res.data.data || []);
+      } catch (err) {
+        console.error("Error fetching appointments:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     if (user?._id) {
       fetchAppointments();
@@ -47,21 +44,35 @@ const CustomerAppointments = () => {
                 Property: {appt.property?.title || "N/A"}
               </p>
               <p className="text-gray-600">
-               Date: {new Date(appt.scheduledAt).toLocaleDateString()}</p>
-              <p className="text-gray-600">
-                Time: {new Date(appt.scheduledAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
-
+                Date:{" "}
+                {appt.scheduledAt
+                  ? new Date(appt.scheduledAt).toLocaleString()
+                  : "N/A"}
+              </p>
               <p className="text-gray-600">
                 Agent: {appt.agent?.name || "N/A"}
               </p>
-              <p className={`font-semibold ${appt.status === "confirmed" ? "text-green-600" : "text-yellow-600"}`}>
+              <p
+                className={`font-semibold ${
+                  appt.status === "confirmed"
+                    ? "text-green-600"
+                    : appt.status === "pending"
+                    ? "text-yellow-600"
+                    : "text-red-600"
+                }`}
+              >
                 Status: {appt.status}
               </p>
+              {appt.notes && (
+                <p className="text-gray-500">Notes: {appt.notes}</p>
+              )}
             </li>
           ))}
         </ul>
       ) : (
-        <p className="text-gray-500">You have no appointments booked yet.</p>
+        <p className="text-gray-500">
+          You have no appointments booked yet.
+        </p>
       )}
     </div>
   );
