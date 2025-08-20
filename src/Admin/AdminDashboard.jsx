@@ -10,16 +10,16 @@ const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [newProperty, setNewProperty] = useState({
-  name: "",
-  price: "",
-  descriptions: "",
-  stock: "",
-  type: "",
-  size: "",
-  rooms: "",
-  location: "",
-  image: "",
-});
+    name: "",
+    price: "",
+    descriptions: "",
+    stock: "",
+    type: "",
+    size: "",
+    rooms: "",
+    location: "",
+    image: "",
+  });
 
   const [editId, setEditId] = useState(null);
 
@@ -31,12 +31,16 @@ const AdminDashboard = () => {
     }
 
     Promise.all([
-      api.get("/properties/getproperties", { headers: { Authorization: `Bearer ${user.token}` } }),
-      api.get("/booking/allbookings", { headers: { Authorization: `Bearer ${user.token}` } }),
+      api.get("/properties/getproperties", {
+        headers: { Authorization: `Bearer ${user.token}` },
+      }),
+      api.get("/booking/allbookings", {
+        headers: { Authorization: `Bearer ${user.token}` },
+      }),
     ])
       .then(([propertiesRes, bookingRes]) => {
-        setProperties(propertiesRes.data.data || []);
-        setBookings(bookingRes.data.data || []);
+        setProperties(propertiesRes.data?.data || []);
+        setBookings(bookingRes.data?.data || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -45,29 +49,31 @@ const AdminDashboard = () => {
       });
   }, [user, navigate]);
 
-  //Adding the property
+  // Adding the property
   const handleAddProperty = async () => {
-    await api.post("/properties/create", newProperty, { headers: { Authorization: `Bearer ${user.token}` } })
-      .then((res) => {
-        setProperties([...properties, res.data.data || res.data]);
-        setNewProperty({
-  name: "",
-  price: "",
-  descriptions: "",
-  stock: "",
-  type: "",
-  size: "",
-  rooms: "",
-  location: "",
-  image: "",
-});
-
-       alert("Properties Added Successfully");
-      })
-      .catch(() => alert("Error in adding property"));
+    try {
+      const res = await api.post("/properties/create", newProperty, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      setProperties((prev) => [...prev, res.data?.data || res.data]);
+      setNewProperty({
+        name: "",
+        price: "",
+        descriptions: "",
+        stock: "",
+        type: "",
+        size: "",
+        rooms: "",
+        location: "",
+        image: "",
+      });
+      alert("Properties Added Successfully");
+    } catch {
+      alert("Error in adding property");
+    }
   };
 
-  //getting details of the property
+  // getting details of the property
   const handleEdit = (property) => {
     setEditId(property._id);
     setNewProperty({
@@ -75,55 +81,70 @@ const AdminDashboard = () => {
       price: property.price,
       descriptions: property.descriptions,
       stock: property.stock,
+      type: property.type || "",
+      size: property.size || "",
+      rooms: property.rooms || "",
+      location: property.location || "",
+      image: property.image || "",
     });
   };
 
-  //edit property
+  // edit property
   const handleUpdateProperty = async () => {
-    await api.put(`/properties/update/${editId}`, newProperty, { headers: { Authorization: `Bearer ${user.token}` } })
-      .then((res) => {
-        const updated = properties.map((p) => (p._id === editId ? res.data.data || res.data : p));
-        setProperties(updated);
-        setEditId(null);
-        setNewProperty({
-  name: "",
-  price: "",
-  descriptions: "",
-  stock: "",
-  type: "",
-  size: "",
-  rooms: "",
-  location: "",
-  image: "",
-});
-
-        alert("Property Updated");
-      })
-      .catch(() => alert("Error in Updating property"));
-  };
-
-  //delete property
-  const handleDeleteProperty = async (id) => {
-    if (confirm("Are you you want to delete this property ?")) {
-      await api.delete(`/properties/delete/${id}`, { headers: { Authorization: `Bearer ${user.token}` } })
-        .then(() => {
-          const filtered = properties.filter((p) => p._id !== id);
-          setProperties(filtered);
-          alert("Property Deleted");
-        })
-        .catch(() => alert("Failed to delete the property"));
+    try {
+      const res = await api.put(`/properties/update/${editId}`, newProperty, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      setProperties((prev) =>
+        prev.map((p) => (p._id === editId ? res.data?.data || res.data : p))
+      );
+      setEditId(null);
+      setNewProperty({
+        name: "",
+        price: "",
+        descriptions: "",
+        stock: "",
+        type: "",
+        size: "",
+        rooms: "",
+        location: "",
+        image: "",
+      });
+      alert("Property Updated");
+    } catch {
+      alert("Error in Updating property");
     }
   };
 
-  //update status
+  // delete property
+  const handleDeleteProperty = async (id) => {
+    if (!confirm("Are you sure you want to delete this property ?")) return;
+    try {
+      await api.delete(`/properties/delete/${id}`, {
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      setProperties((prev) => prev.filter((p) => p._id !== id));
+      alert("Property Deleted");
+    } catch {
+      alert("Failed to delete the property");
+    }
+  };
+
+  // update status
   const handleStatusChange = async (bookingId, newStatus) => {
-    await api.put(`/booking/update/${bookingId}`, { status: newStatus }, { headers: { Authorization: `Bearer ${user.token}` } })
-      .then((res) => {
-        const updatedBookings = bookings.map((o) => (o._id === bookingId ? res.data.data || res.data : o));
-        setBookings(updatedBookings);
-        alert("Booking status Updated");
-      })
-      .catch(() => alert("Failed to update the booking"));
+    try {
+      const res = await api.put(
+        `/booking/update/${bookingId}`,
+        { status: newStatus },
+        { headers: { Authorization: `Bearer ${user.token}` } }
+      );
+      setBookings((prev) =>
+        prev.map((o) => (o._id === bookingId ? res.data?.data || res.data : o))
+      );
+      alert("Booking status Updated");
+    } catch {
+      alert("Failed to update the booking");
+    }
   };
 
   return (
@@ -244,6 +265,11 @@ const AdminDashboard = () => {
                       price: "",
                       descriptions: "",
                       stock: "",
+                      type: "",
+                      size: "",
+                      rooms: "",
+                      location: "",
+                      image: "",
                     });
                   }}
                   className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
@@ -278,11 +304,13 @@ const AdminDashboard = () => {
                 <p className="text-gray-700">Size: {property.size}</p>
                 <p className="text-gray-700">Rooms: {property.rooms}</p>
                 <p className="text-gray-700">Location: {property.location}</p>
-                <img
-                  src={property.image}
-                  alt={property.name}
-                  className="mt-2 w-full h-48 object-cover rounded"
-                />
+                {property.image && (
+                  <img
+                    src={property.image}
+                    alt={property.name}
+                    className="mt-2 w-full h-48 object-cover rounded"
+                  />
+                )}
                 <div className="mt-3">
                   <button
                     onClick={() => handleEdit(property)}
@@ -337,32 +365,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
-                key={booking._id}
-                className="bg-white p-4 shadow rounded border"
-              >
-                <h3 className="text-lg font-bold text-gray-800">
-                  Booking ID: <span className="text-sm">{booking._id}</span>
-                </h3>
-                <p className="text-gray-700">Status: {booking.status}</p>
-                <select
-                  value={booking.status}
-                  onChange={(e) =>
-                    handleStatusChange(booking._id, e.target.value)
-                  }
-                  className="border p-2 mt-2 rounded w-full"
-                >
-                  <option value="Pending">Pending</option>
-                  <option value="Shipped">Booked</option>
-                  <option value="Delivered">Buyed</option>
-                  <option value="Cancelled">Cancelled</option>
-                </select>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
-
 export default AdminDashboard;
