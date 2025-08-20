@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../apiBase.js";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
@@ -24,19 +24,15 @@ const AdminDashboard = () => {
   const [editId, setEditId] = useState(null);
 
   useEffect(() => {
-    if (!user || user.role !== "admin") {
+    if (!user || user.role?.toLowerCase() !== "admin") {
       alert("Access denied ! Redirecting...");
       navigate("/");
       return;
     }
 
     Promise.all([
-      axios.get("https://red1-1-0-0.onrender.com/api/properties/getproperties", {
-        headers: { Authorization: `Bearer ${user.token}` },
-      }),
-      axios.get("https://red1-1-0-0.onrender.com/api/booking/allbookings", {
-        headers: { Authorization: `Bearer ${user.token}` },
-      }),
+      api.get("/properties/getproperties", { headers: { Authorization: `Bearer ${user.token}` } }),
+      api.get("/booking/allbookings", { headers: { Authorization: `Bearer ${user.token}` } }),
     ])
       .then(([propertiesRes, bookingRes]) => {
         setProperties(propertiesRes.data.data || []);
@@ -51,12 +47,9 @@ const AdminDashboard = () => {
 
   //Adding the property
   const handleAddProperty = async () => {
-    await axios
-      .post("https://red1-1-0-0.onrender.com/api/properties/create", newProperty, {
-        headers: { Authorization: `Bearer ${user.token}` },
-      })
+    await api.post("/properties/create", newProperty, { headers: { Authorization: `Bearer ${user.token}` } })
       .then((res) => {
-        setProperties([...properties, res.data]);
+        setProperties([...properties, res.data.data || res.data]);
         setNewProperty({
   name: "",
   price: "",
@@ -70,7 +63,6 @@ const AdminDashboard = () => {
 });
 
        alert("Properties Added Successfully");
-        window.location.reload();
       })
       .catch(() => alert("Error in adding property"));
   };
@@ -88,18 +80,9 @@ const AdminDashboard = () => {
 
   //edit property
   const handleUpdateProperty = async () => {
-    await axios
-      .put(
-        `https://red1-1-0-0.onrender.com/api/properties/update/${editId}`,
-        newProperty,
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      )
+    await api.put(`/properties/update/${editId}`, newProperty, { headers: { Authorization: `Bearer ${user.token}` } })
       .then((res) => {
-        const updated = properties.map((p) =>
-          p._id === editId ? res.data.data : p
-        );
+        const updated = properties.map((p) => (p._id === editId ? res.data.data || res.data : p));
         setProperties(updated);
         setEditId(null);
         setNewProperty({
@@ -122,10 +105,7 @@ const AdminDashboard = () => {
   //delete property
   const handleDeleteProperty = async (id) => {
     if (confirm("Are you you want to delete this property ?")) {
-      await axios
-        .delete(`https://red1-1-0-0.onrender.com/api/properties/delete/${id}`, {
-          headers: { Authorization: `Bearer ${user.token}` },
-        })
+      await api.delete(`/properties/delete/${id}`, { headers: { Authorization: `Bearer ${user.token}` } })
         .then(() => {
           const filtered = properties.filter((p) => p._id !== id);
           setProperties(filtered);
@@ -137,18 +117,9 @@ const AdminDashboard = () => {
 
   //update status
   const handleStatusChange = async (bookingId, newStatus) => {
-    await axios
-      .put(
-        `https://red1-1-0-0.onrender.com/api/booking/update/${bookingId}`,
-        { status: newStatus },
-        {
-          headers: { Authorization: `Bearer ${user.token}` },
-        }
-      )
+    await api.put(`/booking/update/${bookingId}`, { status: newStatus }, { headers: { Authorization: `Bearer ${user.token}` } })
       .then((res) => {
-        const updatedBookings = bookings.map((o) =>
-          o._id === bookingId ? res.data.data : o
-        );
+        const updatedBookings = bookings.map((o) => (o._id === bookingId ? res.data.data || res.data : o));
         setBookings(updatedBookings);
         alert("Booking status Updated");
       })
@@ -337,6 +308,35 @@ const AdminDashboard = () => {
           <div className="grid md:grid-cols-2 gap-5">
             {bookings.map((booking) => (
               <div
+                key={booking._id}
+                className="bg-white p-4 shadow rounded border"
+              >
+                <h3 className="text-lg font-bold text-gray-800">
+                  Booking ID: <span className="text-sm">{booking._id}</span>
+                </h3>
+                <p className="text-gray-700">Status: {booking.status}</p>
+                <select
+                  value={booking.status}
+                  onChange={(e) =>
+                    handleStatusChange(booking._id, e.target.value)
+                  }
+                  className="border p-2 mt-2 rounded w-full"
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Shipped">Booked</option>
+                  <option value="Delivered">Buyed</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default AdminDashboard;
                 key={booking._id}
                 className="bg-white p-4 shadow rounded border"
               >
