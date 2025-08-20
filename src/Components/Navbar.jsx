@@ -193,7 +193,7 @@ const Navbar = () => {
                         {role}
                       </span>
                     </p>
-
+                    
                     {/* Role-specific dashboard */}
                     {isAdmin && (
                       <Link
