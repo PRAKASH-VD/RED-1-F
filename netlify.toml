@@ -8,4 +8,5 @@
   command = "npm run build"
 
 # NOTE: Do NOT commit secrets here. If needed, set VITE_API_BASE_URL in Netlify UI
-# (Site settings → Build & deploy → Environment → Add variable).
+# (Site settings → Build & deploy → Environment → Add variable),
+# or inject a runtime script that assigns window.__API_BASE_URL before your app loads.

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import api from "../apiBase.js";
@@ -115,4 +114,5 @@ const AgentDashboard = () => {
   );
 };
 
+export default AgentDashboard;
 export default AgentDashboard;
