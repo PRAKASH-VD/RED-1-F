@@ -12,18 +12,16 @@ const CustomerAppointments = () => {
 
   useEffect(() => {
     const fetchAppointments = async () => {
-      try {
-        const res = await axios.get(`${API_BASE_URL}/appointments/mine`, { withCredentials: true });
-        if (res.data.status !== "success") {
-          throw new Error("Failed to fetch appointments");
-        }
-        setAppointments(res.data.data);
-      } catch (err) {
-        console.error("Error fetching appointments:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  try {
+    const res = await axios.get(`${API_BASE_URL}/appointments/my`, { withCredentials: true });
+    setAppointments(res.data.data);
+  } catch (err) {
+    console.error("Error fetching appointments:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
     if (user?._id) {
       fetchAppointments();
@@ -49,11 +47,10 @@ const CustomerAppointments = () => {
                 Property: {appt.property?.title || "N/A"}
               </p>
               <p className="text-gray-600">
-                Date: {new Date(appt.date).toLocaleDateString()}
-              </p>
+               Date: {new Date(appt.scheduledAt).toLocaleDateString()}</p>
               <p className="text-gray-600">
-                Time: {appt.time}
-              </p>
+                Time: {new Date(appt.scheduledAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</p>
+
               <p className="text-gray-600">
                 Agent: {appt.agent?.name || "N/A"}
               </p>
