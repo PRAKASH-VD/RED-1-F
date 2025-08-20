@@ -7,5 +7,5 @@
   publish = "dist"
   command = "npm run build"
 
-# NOTE: Set VITE_API_BASE_URL in Netlify UI (Site settings → Build & deploy → Environment)
-  VITE_API_BASE_URL = "https://red1-1-0-0.onrender.com/api"
+# NOTE: Do NOT commit secrets here. If needed, set VITE_API_BASE_URL in Netlify UI
+# (Site settings → Build & deploy → Environment → Add variable).
