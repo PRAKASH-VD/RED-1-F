@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AuthContext } from "../Context/AuthContext";
-import axios from "axios";
+import api from "../apiBase.js";
 
 const AgentDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -13,12 +13,12 @@ const AgentDashboard = () => {
 
     const fetchData = async () => {
       try {
-        const propRes = await axios.get("https://red1-1-0-0.onrender.com/api/properties/agent", {
+        const propRes = await api.get("/properties/agent", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setProperties(propRes.data.data || []);
 
-        const bookRes = await axios.get("https://red1-1-0-0.onrender.com/api/booking/agent", {
+        const bookRes = await api.get("/booking/agent", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setBookings(bookRes.data.data || []);
@@ -50,13 +50,18 @@ const AgentDashboard = () => {
         Agent Dashboard
       </h1>
       <section className="mb-10">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Your Properties</h2>
+        <h2 className="text-xl font-semibold mb-4 text-gray-800">
+          Your Properties
+        </h2>
         {properties.length === 0 ? (
           <p className="text-gray-600">No properties listed yet.</p>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {properties.map((property) => (
-              <div key={property._id} className="bg-white p-4 rounded shadow">
+              <div
+                key={property._id}
+                className="bg-white p-4 rounded shadow"
+              >
                 <h3 className="font-bold text-lg mb-2">{property.name}</h3>
                 <p className="text-gray-700 mb-1">Price: ${property.price}</p>
                 <p className="text-gray-600">{property.description}</p>
@@ -67,7 +72,9 @@ const AgentDashboard = () => {
         )}
       </section>
       <section>
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Your Bookings</h2>
+        <h2 className="text-xl font-semibold mb-4 text-gray-800">
+          Your Bookings
+        </h2>
         {bookings.length === 0 ? (
           <p className="text-gray-600">No bookings found.</p>
         ) : (
@@ -84,10 +91,14 @@ const AgentDashboard = () => {
               <tbody>
                 {bookings.map((booking) => (
                   <tr key={booking._id}>
-                    <td className="py-2 px-4 border-b">{booking.property?.name}</td>
+                    <td className="py-2 px-4 border-b">
+                      {booking.property?.name}
+                    </td>
                     <td className="py-2 px-4 border-b">{booking.user?.name}</td>
                     <td className="py-2 px-4 border-b">{booking.status}</td>
-                    <td className="py-2 px-4 border-b">{new Date(booking.createdAt).toLocaleDateString()}</td>
+                    <td className="py-2 px-4 border-b">
+                      {new Date(booking.createdAt).toLocaleDateString()}
+                    </td>
                   </tr>
                 ))}
               </tbody>

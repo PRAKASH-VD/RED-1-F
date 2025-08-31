@@ -1,7 +1,7 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
+import api from "../apiBase.js";
 
 const AdminDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -32,10 +32,10 @@ const AdminDashboard = () => {
     }
 
     Promise.all([
-      axios.get("https://red1-1-0-0.onrender.com/api/properties/getproperties", {
+      api.get("/properties/getproperties", {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
-      axios.get("https://red1-1-0-0.onrender.com/api/booking/allbookings", {
+      api.get("/booking/allbookings", {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
     ])
@@ -58,8 +58,8 @@ const AdminDashboard = () => {
 
   //Adding the property
   const handleAddProperty = async () => {
-    await axios
-      .post("https://red1-1-0-0.onrender.com/api/properties/create", newProperty, {
+    await api
+      .post("/properties/create", newProperty, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
@@ -95,9 +95,9 @@ const AdminDashboard = () => {
 
   //edit property
   const handleUpdateProperty = async () => {
-    await axios
+    await api
       .put(
-        `https://red1-1-0-0.onrender.com/api/properties/update/${editId}`,
+        `/properties/update/${editId}`,
         newProperty,
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -129,8 +129,8 @@ const AdminDashboard = () => {
   //delete property
   const handleDeleteProperty = async (id) => {
     if (confirm("Are you you want to delete this property ?")) {
-      await axios
-        .delete(`https://red1-1-0-0.onrender.com/api/properties/delete/${id}`, {
+      await api
+        .delete(`/properties/delete/${id}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         })
         .then(() => {
@@ -144,9 +144,9 @@ const AdminDashboard = () => {
 
   //update status
   const handleStatusChange = async (bookingId, newStatus) => {
-    await axios
+    await api
       .put(
-        `https://red1-1-0-0.onrender.com/api/booking/update/${bookingId}`,
+        `/booking/update/${bookingId}`,
         { status: newStatus },
         {
           headers: { Authorization: `Bearer ${user.token}` },
