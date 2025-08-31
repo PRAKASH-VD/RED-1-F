@@ -8,7 +8,7 @@ const AgentProfile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(()=> {
-    axios.get(`http://localhost:3000/api/agents/${id}`)
+    axios.get(`https://red1-1-0-0.onrender.com/api/agents/${id}`)
       .then(res => setAgent(res.data.data))
       .finally(()=>setLoading(false));
   }, [id]);

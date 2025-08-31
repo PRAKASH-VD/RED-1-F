@@ -7,7 +7,7 @@ const PropertyComparison = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/properties")
+    fetch("https://red1-1-0-0.onrender.com/api/properties")
       .then((res) => res.json())
       .then((data) => {
         setProperties(data.data || []);
