@@ -75,7 +75,7 @@ const AgentDashboard = () => {
 
       <h2 className="text-xl font-semibold mb-2">My Listings</h2>
       <div className="grid md:grid-cols-3 gap-4">
-        {mine.map(m=>(
+        {(mine || []).map(m=>(
           <div key={m._id} className="bg-white rounded shadow p-3">
             <img src={m.image} alt={m.name} className="w-full h-32 object-cover rounded"/>
             <div className="mt-2 font-semibold">{m.name}</div>
@@ -96,7 +96,7 @@ const AgentDashboard = () => {
       <h2 className="text-xl font-semibold mt-8 mb-2">Appointments</h2>
       <div className="bg-white rounded shadow divide-y">
         {appointments.length===0 && <div className="p-3 text-gray-500">No appointments yet.</div>}
-        {appointments.map(a=>(
+        {(appointments || []).map(a=>(
           <div key={a._id} className="p-3 flex flex-wrap items-center justify-between gap-2">
             <div>
               <div className="font-semibold">{a.user?.name} • {a.user?.email}</div>
