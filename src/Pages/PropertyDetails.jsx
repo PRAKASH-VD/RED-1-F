@@ -13,7 +13,7 @@ const PropertyDetails = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(()=> {
-    axios.get(`https://red1-1-0-0.onrender.com/api/properties/byid/${id}`)
+    axios.get(`http://localhost:3000/api/properties/byid/${id}`)
       .then(res => setProperty(res.data.data))
       .catch(()=>{})
       .finally(()=>setLoading(false));
@@ -21,7 +21,7 @@ const PropertyDetails = () => {
 
   const addToCart = async () => {
     if (!user) return navigate("/login");
-    await axios.post("https://red1-1-0-0.onrender.com/api/cart/add",
+    await axios.post("http://localhost:3000/api/cart/add",
       { propertyId: property._id, quantity: 1 },
       { headers: { Authorization: `Bearer ${user.token}` }});
     alert("Added to cart");

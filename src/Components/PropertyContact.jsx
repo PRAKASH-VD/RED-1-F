@@ -14,33 +14,26 @@ const PropertyContact = ({ propertyId }) => {
   });
   const [status, setStatus] = useState("");
 
-  const submit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus("");
     try {
-      await axios.post(
-        "https://red1-1-0-0.onrender.com/api/inquiries",
-        {
-          property: propertyId,
-          ...data,
-        },
-        user ? { headers: { Authorization: `Bearer ${user.token}` } } : {}
-      );
-      setStatus("Sent! An agent will contact you soon.");
-      setData({
-        ...data,
-        message: "",
-        phone: "",
-        preferredDate: "",
-        preferredTime: "",
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ propertyId, message, email }),
       });
+      if (res.ok) {
+        alert("Inquiry sent! You will receive an email confirmation.");
+      } else {
+        alert("Failed to send inquiry.");
+      }
     } catch {
-      setStatus("Failed to send. Try again.");
+      alert("Error sending inquiry.");
     }
   };
 
   return (
-    <form onSubmit={submit} className="bg-white shadow rounded p-4">
+    <form onSubmit={handleSubmit} className="bg-white shadow rounded p-4">
       <h3 className="text-xl font-semibold mb-3">
         Contact Agent / Schedule Viewing
       </h3>

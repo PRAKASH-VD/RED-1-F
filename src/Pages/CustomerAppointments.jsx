@@ -1,17 +1,21 @@
 // src/pages/CustomerAppointments.jsx
 import { useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import api from "../apiBase.js"; // ✅ axios instance
 import { AuthContext } from "../Context/AuthContext";
 
 const CustomerAppointments = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await api.get("/appointments/my"); // ✅ matches backend
+        const res = await api.get("/appointments/my", {
+          headers: { Authorization: `Bearer ${user?.token}` },
+        });
         setAppointments(res.data.data || []);
       } catch (err) {
         console.error("Error fetching appointments:", err);
@@ -20,10 +24,17 @@ const CustomerAppointments = () => {
       }
     };
 
+    // If user is not logged in redirect to login (appointments are protected)
+    if (!user) {
+      setLoading(false);
+      navigate("/login");
+      return;
+    }
+
     if (user?._id) {
       fetchAppointments();
     }
-  }, [user]);
+  }, [user, navigate]);
 
   if (loading) return <p className="text-center py-6">Loading...</p>;
 

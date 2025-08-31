@@ -15,7 +15,7 @@ const Cart = () => {
       return;
     }
     axios
-      .get("https://red1-1-0-0.onrender.com/api/cart/view", {
+      .get("http://localhost:3000/api/cart/view", {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
@@ -41,7 +41,7 @@ const Cart = () => {
       return;
     await axios
       .put(
-        `https://red1-1-0-0.onrender.com/api/cart/update/${propertyId}`,
+        `http://localhost:3000/api/cart/update/${propertyId}`,
         { change },
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -61,7 +61,7 @@ const Cart = () => {
 
   const removeFromCart = async (propertyId) => {
     await axios
-      .delete(`https://red1-1-0-0.onrender.com/api/cart/remove/${propertyId}`, {
+      .delete(`http://localhost:3000/api/cart/remove/${propertyId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then(() => {
@@ -81,7 +81,7 @@ const Cart = () => {
     }
   await axios
       .post(
-        "https://red1-1-0-0.onrender.com/api/booking/create",
+        "http://localhost:3000/api/booking/create",
         { cartItems: cart },
         {
           headers: { Authorization: `Bearer ${user.token}` },

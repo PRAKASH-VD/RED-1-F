@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import Navbar from "./Components/Navbar";
 import Footer from "./Components/Footer";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import Home from "./Pages/Home";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
@@ -21,7 +21,8 @@ import Messages from "./Pages/Messages";
 import AdminReports from "./Pages/AdminReports";
 import CustomerAppointments from "./Pages/CustomerAppointments";
 import AgentAppointments from "./Pages/AgentAppointments";
-
+import Profile from "./Pages/Profile";
+import PropertyComparison from "./Pages/PropertyComparison";
 
 const App = () => {
   const { user } = useContext(AuthContext);
@@ -45,6 +46,7 @@ const App = () => {
           <Route path="/booking" element={<Booking />} />
           <Route path="/appointments" element={<CustomerAppointments />} />
 
+          <Route path="/compare" element={<PropertyComparison />} />
           <Route
             path="/admin"
             element={
@@ -57,6 +59,7 @@ const App = () => {
           />
           <Route path="/property/:id" element={<PropertyDetails />} />
           <Route path="/agent/:id" element={<AgentProfile />} />
+
           <Route
             path="/agent/appointments"
             element={
@@ -91,6 +94,20 @@ const App = () => {
             path="/messages"
             element={user ? <Messages /> : <Navigate to={"/login"} />}
           />
+
+          {/* redirect /profile to current user's profile and support /profile/:id */}
+          <Route
+            path="/profile"
+            element={
+              user ? (
+                <Navigate to={`/profile/${user.id}`} />
+              ) : (
+                <Navigate to={"/login"} />
+              )
+            }
+          />
+          <Route path="/profile/:id" element={<Profile />} />
+
           <Route path="/success" element={<Success />} />
           <Route path="/cancel" element={<Cancel />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -99,6 +116,8 @@ const App = () => {
             path="/reset-password/:id/:token"
             element={<ResetPassword />}
           />
+
+          {/* catch-all 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

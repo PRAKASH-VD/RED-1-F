@@ -17,7 +17,7 @@ const Booking = () => {
       return;
     }
     axios
-      .get("https://red1-1-0-0.onrender.com/api/booking/mybookings", {
+      .get("http://localhost:3000/api/booking/mybookings", {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
@@ -48,7 +48,7 @@ const Booking = () => {
     }
     await axios
       .post(
-        "https://red1-1-0-0.onrender.com/api/payments/checkout",
+        "http://localhost:3000/api/payments/checkout",
         {
           items: allItems,
           amount: totalAmount,
@@ -64,6 +64,22 @@ const Booking = () => {
         console.log(err);
         alert("Error in processing payment");
       });
+  };
+
+  const handleBooking = async () => {
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "POST",
+        body: JSON.stringify({ propertyId }),
+      });
+      if (res.ok) {
+        alert("Booking successful!");
+      } else {
+        alert("Booking failed.");
+      }
+    } catch {
+      alert("Error booking property.");
+    }
   };
 
   return (
@@ -84,7 +100,8 @@ const Booking = () => {
                 className="bg-white shadow-md rounded p-5 mb-6"
               >
                 <h2 className="text-xl font-semibold mb-2">
-                  Booking Id: <span className="text-blue-500">{booking._id}</span>
+                  Booking Id:{" "}
+                  <span className="text-blue-500">{booking._id}</span>
                 </h2>
                 <p>
                   <strong>Status:</strong>
@@ -118,7 +135,7 @@ const Booking = () => {
             >
               Proceed to Payment
             </button>
-          )}    
+          )}
         </div>
       )}
     </div>

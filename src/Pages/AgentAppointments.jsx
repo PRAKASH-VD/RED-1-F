@@ -1,22 +1,25 @@
 import { useEffect, useState, useContext } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import api from "../apiBase.js";
 import { AuthContext } from "../Context/AuthContext";
-import API_BASE_URL from "../apiBase.js";
 
 
 const AgentAppointments = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const { data } = await axios.get(
-         `${API_BASE_URL}/appointments/agent/my`,
-          { withCredentials: true }
+        const { data } = await api.get(
+          "/appointments/agent/my",
+          {
+            headers: { Authorization: `Bearer ${user?.token}` },
+          }
         );
-        setAppointments(data.data);
+        setAppointments(data.data || []);
       } catch (error) {
         console.error("Error fetching agent appointments:", error);
       } finally {
@@ -24,10 +27,41 @@ const AgentAppointments = () => {
       }
     };
 
-    if (user?.role?.toLowerCase() === "agent") {
-      fetchAppointments();
+    if (!user) {
+      setLoading(false);
+      navigate("/login");
+      return;
     }
-  }, [user]);
+
+    if (user?.role?.toLowerCase() !== "agent") {
+      setLoading(false);
+      navigate("/");
+      return;
+    }
+
+    fetchAppointments();
+  }, [user, navigate]);
+
+  async function sendBookingEmail(booking) {
+    try {
+      if (!booking) throw new Error("sendBookingEmail called without booking");
+
+      const propertyId = booking.propertyId || booking.property?._id;
+      const recipient = booking.user?.email;
+      if (!recipient) throw new Error("Booking has no recipient email");
+
+      const html = `<p>Your booking for property ${propertyId} was received.</p>`;
+      await transporter.sendMail({
+        to: recipient,
+        subject: "Booking confirmation",
+        html
+      });
+
+      console.log("✅ Email sent successfully");
+    } catch (err) {
+      console.error("Email sending failed:", err?.message || err);
+    }
+  }
 
   if (loading) return <p className="text-center py-6">Loading...</p>;
 
@@ -57,7 +91,7 @@ const AgentAppointments = () => {
               <span className="font-medium">Date:</span>{" "}
               {new Date(appt.scheduledAt).toLocaleString()}
             </p>
-            <p className="text-gray-600">
+              <p className="text-gray-600">
               <span className="font-medium">Notes:</span>{" "}
               {appt.notes || "N/A"}
             </p>

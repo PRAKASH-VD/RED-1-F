@@ -12,18 +12,18 @@ const Messages = () => {
 
   useEffect(()=>{
     if (!user) return;
-    axios.get("https://red1-1-0-0.onrender.com/api/messages/threads", { headers })
+    axios.get("http://localhost:3000/api/messages/threads", { headers })
       .then(res => setThreads(res.data.data || []));
   }, [user]);
 
   const openThread = async (id) => {
-    const res = await axios.get(`https://red1-1-0-0.onrender.com/api/messages/thread/${id}`, { headers });
+    const res = await axios.get(`http://localhost:3000/api/messages/thread/${id}`, { headers });
     setActive(res.data.data);
   };
 
   const send = async () => {
     if (!active || !message.trim()) return;
-    const res = await axios.post(`https://red1-1-0-0.onrender.com/api/messages/thread/${active._id}`, { text: message }, { headers });
+    const res = await axios.post(`http://localhost:3000/api/messages/thread/${active._id}`, { text: message }, { headers });
     setActive({ ...active, messages: res.data.data.messages });
     setMessage("");
   };

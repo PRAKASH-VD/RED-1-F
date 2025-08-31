@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -8,19 +8,21 @@ const Register = () => {
     name: "",
     email: "",
     password: "",
+    role: "user",
   });
 
   const handleRegister = async (e) => {
     e.preventDefault();
-      if (!userData.name || !userData.email || !userData.password) {
-    alert("Please fill all fields");
-    return;
-  }
+    if (!userData.name || !userData.email || !userData.password) {
+      alert("Please fill all fields");
+      return;
+    }
     try {
-      await axios.post("https://red1-1-0-0.onrender.com/api/auth/register", userData);
+      await axios.post("http://localhost:3000/api/auth/register", userData);
       alert("Registration Successful please proceed to login");
       navigate("/login");
     } catch (error) {
+      console.error(error);
       alert("Error in Registering User");
     }
   };
@@ -50,11 +52,26 @@ const Register = () => {
         <input
           type="password"
           placeholder="Enter Your Password"
-          className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           onChange={(e) =>
             setUserData({ ...userData, password: e.target.value })
           }
         />
+
+        <label className="block text-sm text-gray-600 mb-2">
+          Register as
+        </label>
+        <select
+          value={userData.role}
+          onChange={(e) =>
+            setUserData({ ...userData, role: e.target.value })
+          }
+          className="w-full p-3 mb-6 border border-gray-300 rounded-lg"
+        >
+          <option value="user">User</option>
+          <option value="agent">Agent</option>
+          <option value="admin">Admin</option>
+        </select>
 
         <button
           type="submit"
@@ -65,12 +82,12 @@ const Register = () => {
 
         <p className="text-center text-sm text-gray-600 mt-4">
           Already have an account?{" "}
-          <a
-            href="/login"
+          <Link
+            to="/login"
             className="text-blue-600 hover:underline font-medium"
           >
             Login
-          </a>
+          </Link>
         </p>
       </form>
     </div>

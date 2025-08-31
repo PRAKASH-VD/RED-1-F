@@ -22,6 +22,7 @@ const AdminDashboard = () => {
 });
 
   const [editId, setEditId] = useState(null);
+  const [agents, setAgents] = useState([]);
 
   useEffect(() => {
     if (!user || user.role !== "admin") {
@@ -31,10 +32,10 @@ const AdminDashboard = () => {
     }
 
     Promise.all([
-      axios.get("https://red1-1-0-0.onrender.com/api/properties/getproperties", {
+      axios.get("http://localhost:3000/api/properties/getproperties", {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
-      axios.get("https://red1-1-0-0.onrender.com/api/booking/allbookings", {
+      axios.get("http://localhost:3000/api/booking/allbookings", {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
     ])
@@ -49,10 +50,16 @@ const AdminDashboard = () => {
       });
   }, [user, navigate]);
 
+  useEffect(() => {
+    fetch("/api/agents")
+      .then((res) => res.json())
+      .then(setAgents);
+  }, []);
+
   //Adding the property
   const handleAddProperty = async () => {
     await axios
-      .post("https://red1-1-0-0.onrender.com/api/properties/create", newProperty, {
+      .post("http://localhost:3000/api/properties/create", newProperty, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
@@ -90,7 +97,7 @@ const AdminDashboard = () => {
   const handleUpdateProperty = async () => {
     await axios
       .put(
-        `https://red1-1-0-0.onrender.com/api/properties/update/${editId}`,
+        `http://localhost:3000/api/properties/update/${editId}`,
         newProperty,
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -123,7 +130,7 @@ const AdminDashboard = () => {
   const handleDeleteProperty = async (id) => {
     if (confirm("Are you you want to delete this property ?")) {
       await axios
-        .delete(`https://red1-1-0-0.onrender.com/api/properties/delete/${id}`, {
+        .delete(`http://localhost:3000/api/properties/delete/${id}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         })
         .then(() => {
@@ -139,7 +146,7 @@ const AdminDashboard = () => {
   const handleStatusChange = async (bookingId, newStatus) => {
     await axios
       .put(
-        `https://red1-1-0-0.onrender.com/api/booking/update/${bookingId}`,
+        `http://localhost:3000/api/booking/update/${bookingId}`,
         { status: newStatus },
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -153,6 +160,27 @@ const AdminDashboard = () => {
         alert("Booking status Updated");
       })
       .catch(() => alert("Failed to update the booking"));
+  };
+
+  const handleDelete = (id) => {
+    if (confirm("Are you sure you want to delete this agent?")) {
+      fetch(`/api/agents/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Network response was not ok");
+          setAgents(agents.filter((agent) => agent._id !== id));
+          alert("Agent deleted successfully");
+        })
+        .catch((err) => {
+          console.error("There was a problem with the fetch operation:", err);
+          alert("Failed to delete the agent");
+        });
+    }
   };
 
   return (
@@ -356,6 +384,19 @@ const AdminDashboard = () => {
                   <option value="Delivered">Buyed</option>
                   <option value="Cancelled">Cancelled</option>
                 </select>
+              </div>
+            ))}
+          </div>
+
+          {/* Agents List */}
+          <h2 className="text-2xl font-semibold mb-4 text-gray-800">
+            Agents
+          </h2>
+          <div className="bg-white p-4 shadow rounded border">
+            {agents.map((agent) => (
+              <div key={agent._id}>
+                <p>{agent.name} - {agent.email}</p>
+                <button onClick={() => handleDelete(agent._id)}>Delete</button>
               </div>
             ))}
           </div>

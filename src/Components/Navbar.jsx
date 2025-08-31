@@ -98,19 +98,15 @@ const Navbar = () => {
 
           {/* Agent Routes */}
           {isAgent && (
-  <>
-    <Link to="/agent" className="hover:text-blue-600 transition duration-300">
-      Dashboard
-    </Link>
-    <Link to="/agent/appointments" className="hover:text-blue-600 transition duration-300">
-      Appointments
-    </Link>
-    {/* Add this only if you actually have this route */}
-    {/* <Link to="/agent/properties" className="hover:text-blue-600 transition duration-300">
-      My Listings
-    </Link> */}
-  </>
-)}
+            <>
+              <Link to="/agent" className="hover:text-blue-600 transition duration-300">
+                Dashboard
+              </Link>
+              <Link to="/agent/appointments" className="hover:text-blue-600 transition duration-300">
+                Appointments
+              </Link>
+            </>
+          )}
 
           {/* User Routes */}
           {isUser && (
@@ -206,7 +202,7 @@ const Navbar = () => {
                     )}
                     {isAgent && (
                       <Link
-                        to="/agent-dashboard"
+                        to="/agent"
                         className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
                         onClick={() => setDropdownOpen(false)}
                       >

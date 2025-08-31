@@ -13,12 +13,12 @@ const AgentDashboard = () => {
 
     const fetchData = async () => {
       try {
-        const propRes = await axios.get("https://red1-1-0-0.onrender.com/api/properties/agent", {
+        const propRes = await axios.get("http://localhost:3000/api/properties/agent", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setProperties(propRes.data.data || []);
 
-        const bookRes = await axios.get("https://red1-1-0-0.onrender.com/api/booking/agent", {
+        const bookRes = await axios.get("http://localhost:3000/api/booking/agent", {
           headers: { Authorization: `Bearer ${user.token}` },
         });
         setBookings(bookRes.data.data || []);

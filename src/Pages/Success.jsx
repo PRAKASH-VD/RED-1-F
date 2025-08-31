@@ -16,7 +16,7 @@ const Success = () => {
     //mark booking as paid in backend
     axios
       .post(
-        "https://red1-1-0-0.onrender.com/api/booking/success",
+        "http://localhost:3000/api/booking/success",
         {},
         {
           headers: { Authorization: `Bearer ${user.token}` },

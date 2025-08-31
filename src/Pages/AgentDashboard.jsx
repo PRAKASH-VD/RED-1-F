@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import API_BASE_URL from "../apiBase.js";
 
-const empty = { name:"", price:"", type:"", size:"", rooms:"", location:"", image:"", description:"" };
+const empty = { name:"", price:"", type:"", size:"", rooms:"", location:"", image:"", descriptions:"" };
 
 const AgentDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -28,23 +28,23 @@ const AgentDashboard = () => {
 
   const save = async () => {
     if (editId) {
-      const { data } = await axios.put(`https://red1-1-0-0.onrender.com/api/properties/update/${editId}`, form, { headers });
+      const { data } = await axios.put(`http://localhost:3000/api/properties/update/${editId}`, form, { headers });
       setMine(mine.map(m => m._id === editId ? data.data : m));
       setEditId(null); setForm(empty);
     } else {
-      const { data } = await axios.post("https://red1-1-0-0.onrender.com/api/properties/create", form, { headers });
+      const { data } = await axios.post("http://localhost:3000/api/properties/create", form, { headers });
       setMine([...mine, data.data || data]);
       setForm(empty);
     }
   };
 
   const del = async (id) => {
-    await axios.delete(`https://red1-1-0-0.onrender.com/api/properties/delete/${id}`, { headers });
+    await axios.delete(`http://localhost:3000/api/properties/delete/${id}`, { headers });
     setMine(mine.filter(m => m._id !== id));
   };
 
   const confirmAppointment = async (id, status) => {
-    await axios.put(`https://red1-1-0-0.onrender.com/api/appointments/${id}`, { status }, { headers });
+    await axios.put(`http://localhost:3000/api/appointments/${id}`, { status }, { headers });
     setAppointments(appointments.map(a => a._id === id ? { ...a, status } : a));
   };
 
@@ -61,7 +61,7 @@ const AgentDashboard = () => {
               onChange={(e)=>setForm({...form, [k]: e.target.value})}/>
           ))}
           <textarea className="border p-2 rounded md:col-span-3" placeholder="description"
-            value={form.description} onChange={(e)=>setForm({...form, description:e.target.value})}/>
+            value={form.descriptions} onChange={(e)=>setForm({...form, descriptions:e.target.value})}/>
         </div>
         <div className="mt-3 flex gap-2">
           <button onClick={save} className="bg-blue-600 text-white px-4 py-2 rounded">
@@ -85,7 +85,7 @@ const AgentDashboard = () => {
             <div className="mt-2 flex gap-2">
               <button onClick={()=>{setEditId(m._id); setForm({
                 name:m.name, price:m.price, type:m.type, size:m.size, rooms:m.rooms,
-                location:m.location, image:m.image, description:m.description
+                location:m.location, image:m.image, descriptions: m.descriptions || m.description
               });}}
                 className="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
               <button onClick={()=>del(m._id)} className="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
