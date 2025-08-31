@@ -323,7 +323,7 @@ const AdminDashboard = () => {
             Properties
           </h2>
           <div className="grid md:grid-cols-2 gap-5 mb-10">
-            {properties.map((property) => (
+            {(properties || []).map((property) => (
               <div
                 key={property._id}
                 className="bg-white p-4 shadow rounded border"
@@ -363,7 +363,7 @@ const AdminDashboard = () => {
             Bookings
           </h2>
           <div className="grid md:grid-cols-2 gap-5">
-            {bookings.map((booking) => (
+            {(bookings || []).map((booking) => (
               <div
                 key={booking._id}
                 className="bg-white p-4 shadow rounded border"
@@ -393,7 +393,7 @@ const AdminDashboard = () => {
             Agents
           </h2>
           <div className="bg-white p-4 shadow rounded border">
-            {agents.map((agent) => (
+            {(agents || []).map((agent) => (
               <div key={agent._id}>
                 <p>{agent.name} - {agent.email}</p>
                 <button onClick={() => handleDelete(agent._id)}>Delete</button>

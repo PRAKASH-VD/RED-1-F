@@ -57,15 +57,12 @@ const AgentDashboard = () => {
           <p className="text-gray-600">No properties listed yet.</p>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.map((property) => (
-              <div
-                key={property._id}
-                className="bg-white p-4 rounded shadow"
-              >
-                <h3 className="font-bold text-lg mb-2">{property.name}</h3>
-                <p className="text-gray-700 mb-1">Price: ${property.price}</p>
-                <p className="text-gray-600">{property.description}</p>
-                <p className="text-sm text-gray-500">Stock: {property.stock}</p>
+            {(properties || []).map((p) => (
+              <div key={p._id} className="bg-white p-4 rounded shadow">
+                <h3 className="font-bold text-lg mb-2">{p.name}</h3>
+                <p className="text-gray-700 mb-1">Price: ${p.price}</p>
+                <p className="text-gray-600">{p.description}</p>
+                <p className="text-sm text-gray-500">Stock: {p.stock}</p>
               </div>
             ))}
           </div>
