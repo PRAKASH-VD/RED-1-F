@@ -32,10 +32,10 @@ const AdminDashboard = () => {
     }
 
     Promise.all([
-      axios.get("http://localhost:3000/api/properties/getproperties", {
+      axios.get("https://red1-1-0-0.onrender.com/api/properties/getproperties", {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
-      axios.get("http://localhost:3000/api/booking/allbookings", {
+      axios.get("https://red1-1-0-0.onrender.com/api/booking/allbookings", {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
     ])
@@ -59,7 +59,7 @@ const AdminDashboard = () => {
   //Adding the property
   const handleAddProperty = async () => {
     await axios
-      .post("http://localhost:3000/api/properties/create", newProperty, {
+      .post("https://red1-1-0-0.onrender.com/api/properties/create", newProperty, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
@@ -97,7 +97,7 @@ const AdminDashboard = () => {
   const handleUpdateProperty = async () => {
     await axios
       .put(
-        `http://localhost:3000/api/properties/update/${editId}`,
+        `https://red1-1-0-0.onrender.com/api/properties/update/${editId}`,
         newProperty,
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -130,7 +130,7 @@ const AdminDashboard = () => {
   const handleDeleteProperty = async (id) => {
     if (confirm("Are you you want to delete this property ?")) {
       await axios
-        .delete(`http://localhost:3000/api/properties/delete/${id}`, {
+        .delete(`https://red1-1-0-0.onrender.com/api/properties/delete/${id}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         })
         .then(() => {
@@ -146,7 +146,7 @@ const AdminDashboard = () => {
   const handleStatusChange = async (bookingId, newStatus) => {
     await axios
       .put(
-        `http://localhost:3000/api/booking/update/${bookingId}`,
+        `https://red1-1-0-0.onrender.com/api/booking/update/${bookingId}`,
         { status: newStatus },
         {
           headers: { Authorization: `Bearer ${user.token}` },

@@ -13,7 +13,7 @@ const CustomerAppointments = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await api.get("http://localhost:3000/api/appointments/my", {
+        const res = await api.get("https://red1-1-0-0.onrender.com/api/appointments/my", {
           headers: { Authorization: `Bearer ${user?.token}` },
         });
         setAppointments(res.data.data || []);

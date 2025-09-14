@@ -44,7 +44,7 @@ const Register = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      await axios.post("http://localhost:3000/api/auth/register", data);
+      await axios.post("https://red1-1-0-0.onrender.com/api/auth/register", data);
       showToast("Registration Successful! Please proceed to login.", "success");
       navigate("/login");
     } catch (error) {
