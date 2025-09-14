@@ -1,6 +1,7 @@
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
-import api from "../apiBase.js";
+import API_BASE_URL from "../apiBase.js";
 
 const empty = { name:"", price:"", type:"", size:"", rooms:"", location:"", image:"", descriptions:"" };
 
@@ -15,8 +16,8 @@ const AgentDashboard = () => {
     if (!user || user.role?.toLowerCase() !== "agent") return;
     const headers = { Authorization: `Bearer ${user.token}` };
     Promise.all([
-      api.get("/properties/mine", { headers }),
-      api.get("/appointments/mine", { headers })
+      axios.get(`${API_BASE_URL}/properties/mine`, { headers }),
+      axios.get(`${API_BASE_URL}/appointments/mine`, { headers })
     ]).then(([pRes, aRes])=>{
       setMine(pRes.data.data || []);
       setAppointments(aRes.data.data || []);
@@ -27,23 +28,23 @@ const AgentDashboard = () => {
 
   const save = async () => {
     if (editId) {
-      const { data } = await api.put(`/properties/update/${editId}`, form, { headers });
+      const { data } = await axios.put(`http://localhost:3000/api/properties/update/${editId}`, form, { headers });
       setMine(mine.map(m => m._id === editId ? data.data : m));
       setEditId(null); setForm(empty);
     } else {
-      const { data } = await api.post("/properties/create", form, { headers });
+      const { data } = await axios.post("http://localhost:3000/api/properties/create", form, { headers });
       setMine([...mine, data.data || data]);
       setForm(empty);
     }
   };
 
   const del = async (id) => {
-    await api.delete(`/properties/delete/${id}`, { headers });
+    await axios.delete(`http://localhost:3000/api/properties/delete/${id}`, { headers });
     setMine(mine.filter(m => m._id !== id));
   };
 
   const confirmAppointment = async (id, status) => {
-    await api.put(`/appointments/${id}`, { status }, { headers });
+    await axios.put(`http://localhost:3000/api/appointments/${id}`, { status }, { headers });
     setAppointments(appointments.map(a => a._id === id ? { ...a, status } : a));
   };
 
@@ -75,7 +76,7 @@ const AgentDashboard = () => {
 
       <h2 className="text-xl font-semibold mb-2">My Listings</h2>
       <div className="grid md:grid-cols-3 gap-4">
-        {(mine || []).map(m=>(
+        {mine.map(m=>(
           <div key={m._id} className="bg-white rounded shadow p-3">
             <img src={m.image} alt={m.name} className="w-full h-32 object-cover rounded"/>
             <div className="mt-2 font-semibold">{m.name}</div>
@@ -96,7 +97,7 @@ const AgentDashboard = () => {
       <h2 className="text-xl font-semibold mt-8 mb-2">Appointments</h2>
       <div className="bg-white rounded shadow divide-y">
         {appointments.length===0 && <div className="p-3 text-gray-500">No appointments yet.</div>}
-        {(appointments || []).map(a=>(
+        {appointments.map(a=>(
           <div key={a._id} className="p-3 flex flex-wrap items-center justify-between gap-2">
             <div>
               <div className="font-semibold">{a.user?.name} • {a.user?.email}</div>

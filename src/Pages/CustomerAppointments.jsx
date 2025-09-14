@@ -13,7 +13,7 @@ const CustomerAppointments = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const res = await api.get("/appointments/my", {
+        const res = await api.get("http://localhost:3000/api/appointments/my", {
           headers: { Authorization: `Bearer ${user?.token}` },
         });
         setAppointments(res.data.data || []);

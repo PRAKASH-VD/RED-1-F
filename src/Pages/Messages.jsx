@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
+import { useToast } from "../Context/ToastContext";
 
 const Messages = () => {
   const { user } = useContext(AuthContext);
+  const { showToast } = useToast();
   const [threads, setThreads] = useState([]);
   const [active, setActive] = useState(null);
   const [message, setMessage] = useState("");
@@ -12,20 +14,25 @@ const Messages = () => {
 
   useEffect(()=>{
     if (!user) return;
-    axios.get("https://red1-1-0-0.onrender.com/api/messages/threads", { headers })
+    axios.get("http://localhost:3000/api/messages/threads", { headers })
       .then(res => setThreads(res.data.data || []));
   }, [user]);
 
   const openThread = async (id) => {
-    const res = await axios.get(`https://red1-1-0-0.onrender.com/api/messages/thread/${id}`, { headers });
+    const res = await axios.get(`http://localhost:3000/api/messages/thread/${id}`, { headers });
     setActive(res.data.data);
   };
 
   const send = async () => {
     if (!active || !message.trim()) return;
-    const res = await axios.post(`https://red1-1-0-0.onrender.com/api/messages/thread/${active._id}`, { text: message }, { headers });
-    setActive({ ...active, messages: res.data.data.messages });
-    setMessage("");
+    try {
+      const res = await axios.post(`http://localhost:3000/api/messages/thread/${active._id}`, { text: message }, { headers });
+      setActive({ ...active, messages: res.data.data.messages });
+      setMessage("");
+      showToast("Message sent!", "success");
+    } catch (err) {
+      showToast("Failed to send message", "error");
+    }
   };
 
   return (

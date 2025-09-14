@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "", // Use relative path, do not hardcode secret URL
+  baseURL: "http://localhost:3000/api",
   withCredentials: true,
 });
 

@@ -2,12 +2,14 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../Context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "../Context/ToastContext";
 
 const Cart = () => {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!user) {
@@ -15,7 +17,7 @@ const Cart = () => {
       return;
     }
     axios
-      .get("https://red1-1-0-0.onrender.com/api/cart/view", {
+      .get("http://localhost:3000/api/cart/view", {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
@@ -41,7 +43,7 @@ const Cart = () => {
       return;
     await axios
       .put(
-        `https://red1-1-0-0.onrender.com/api/cart/update/${propertyId}`,
+        `http://localhost:3000/api/cart/update/${propertyId}`,
         { change },
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -55,13 +57,14 @@ const Cart = () => {
         );
         setCart(updatedCart);
         calculateTotal(updatedCart);
+        showToast("Cart updated!", "success");
       })
-      .catch(() => alert("Error in updating Quantity"));
+      .catch(() => showToast("Error in updating Quantity", "error"));
   };
 
   const removeFromCart = async (propertyId) => {
     await axios
-      .delete(`https://red1-1-0-0.onrender.com/api/cart/remove/${propertyId}`, {
+      .delete(`http://localhost:3000/api/cart/remove/${propertyId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then(() => {
@@ -70,71 +73,76 @@ const Cart = () => {
         );
         setCart(updatedCart);
         calculateTotal(updatedCart);
+        showToast("Item removed from cart!", "success");
       })
-      .catch(() => alert("Error in removing items to cart"));
+      .catch(() => showToast("Error in removing items from cart", "error"));
   };
 
   const placebooking = async () => {
     if (cart.length === 0) {
-      alert("cart is empty cannot place booking");
+      showToast("Cart is empty, cannot place booking", "error");
       return;
     }
-  await axios
+    await axios
       .post(
-        "https://red1-1-0-0.onrender.com/api/booking/create",
+        "http://localhost:3000/api/booking/create",
         { cartItems: cart },
         {
           headers: { Authorization: `Bearer ${user.token}` },
         }
       )
       .then(() => {
-        alert("Booking placed successfully!");
+        showToast("Booking placed successfully!", "success");
         setCart([]);
         navigate("/booking");
       })
-      .catch(() => alert("Error placing booking!"));
+      .catch(() => showToast("Error placing booking!", "error"));
   };
   return (
-    <div className="p-6 min-h-screen bg-gray-50">
-      <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
+    <div className="min-h-screen bg-gray-50 px-2 sm:px-4 md:px-6 py-6 md:py-10">
+      <h1 className="text-2xl sm:text-3xl font-bold mb-6 text-center text-gray-800">
         🛍️Your Cart
       </h1>
       {cart.length === 0 ? (
-        <p className="text-center text-gray-600">Cart is Empty</p>
+        <p className="text-center text-gray-600 mt-8">Cart is Empty</p>
       ) : (
         <div className="max-w-5xl mx-auto">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
             {cart.map((item) => {
               return (
                 <div
                   key={item.property._id}
-                  className="bg-white shadow-lg rounded-lg p-4"
+                  className="bg-white shadow-lg rounded-lg p-4 flex flex-col justify-between h-full"
                 >
-                  <h2 className="text-lg font-semibold text-gray-800">
-                    {item.property.name}
-                  </h2>
-                  <p className="text-blue-600 font-bold">
-                    ${item.property.price}
-                  </p>
+                  <div>
+                    <h2 className="text-base sm:text-lg font-semibold text-gray-800">
+                      {item.property.name}
+                    </h2>
+                    <p className="text-blue-600 font-bold mt-1">
+                      ${item.property.price}
+                    </p>
+                  </div>
                   <div className="flex items-center mt-3">
                     <button
                       onClick={() => updateQuantity(item.property._id, -1)}
-                      className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded-l"
+                      className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded-l focus:outline-none"
+                      aria-label="Decrease quantity"
                     >
                       -
                     </button>
                     <span className="px-4">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.property._id, 1)}
-                      className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded-l"
+                      className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded-r focus:outline-none"
+                      aria-label="Increase quantity"
                     >
                       +
                     </button>
                   </div>
-                  <div>
+                  <div className="mt-4">
                     <button
                       onClick={() => removeFromCart(item.property._id)}
-                      className="mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded w-full"
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded w-full transition"
                     >
                       Remove
                     </button>
@@ -144,12 +152,12 @@ const Cart = () => {
             })}
           </div>
           <div className="mt-10 text-center">
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-800">
               Total Price: ${totalPrice}
             </h2>
             <button
               onClick={placebooking}
-              className="mt-4 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded text-lg shadow"
+              className="mt-4 bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded text-base sm:text-lg shadow transition"
             >
               Place Booking
             </button>

@@ -17,14 +17,14 @@ const PropertyFilters = ({ onChange, initial = {} }) => {
         value={filters.minPrice} onChange={(e)=>setFilters({...filters, minPrice:e.target.value})}/>
       <input type="number" placeholder="Max Price" className="border p-2 rounded"
         value={filters.maxPrice} onChange={(e)=>setFilters({...filters, maxPrice:e.target.value})}/>
-      <select className="border p-2 rounded"
+      {/* <select className="border p-2 rounded"
         value={filters.type} onChange={(e)=>setFilters({...filters, type:e.target.value})}>
         <option value="">Type</option>
         <option>Apartment</option>
         <option>Villa</option>
         <option>Independent House</option>
         <option>Commercial</option>
-      </select>
+      </select> */}
       <select className="border p-2 rounded"
         value={filters.rooms} onChange={(e)=>setFilters({...filters, rooms:e.target.value})}>
         <option value="">Rooms</option>

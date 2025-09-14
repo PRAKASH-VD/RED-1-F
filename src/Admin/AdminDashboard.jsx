@@ -1,7 +1,7 @@
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
-import api from "../apiBase.js";
 
 const AdminDashboard = () => {
   const { user } = useContext(AuthContext);
@@ -32,10 +32,10 @@ const AdminDashboard = () => {
     }
 
     Promise.all([
-      api.get("/properties/getproperties", {
+      axios.get("http://localhost:3000/api/properties/getproperties", {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
-      api.get("/booking/allbookings", {
+      axios.get("http://localhost:3000/api/booking/allbookings", {
         headers: { Authorization: `Bearer ${user.token}` },
       }),
     ])
@@ -58,8 +58,8 @@ const AdminDashboard = () => {
 
   //Adding the property
   const handleAddProperty = async () => {
-    await api
-      .post("/properties/create", newProperty, {
+    await axios
+      .post("http://localhost:3000/api/properties/create", newProperty, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
@@ -95,9 +95,9 @@ const AdminDashboard = () => {
 
   //edit property
   const handleUpdateProperty = async () => {
-    await api
+    await axios
       .put(
-        `/properties/update/${editId}`,
+        `http://localhost:3000/api/properties/update/${editId}`,
         newProperty,
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -129,8 +129,8 @@ const AdminDashboard = () => {
   //delete property
   const handleDeleteProperty = async (id) => {
     if (confirm("Are you you want to delete this property ?")) {
-      await api
-        .delete(`/properties/delete/${id}`, {
+      await axios
+        .delete(`http://localhost:3000/api/properties/delete/${id}`, {
           headers: { Authorization: `Bearer ${user.token}` },
         })
         .then(() => {
@@ -144,9 +144,9 @@ const AdminDashboard = () => {
 
   //update status
   const handleStatusChange = async (bookingId, newStatus) => {
-    await api
+    await axios
       .put(
-        `/booking/update/${bookingId}`,
+        `http://localhost:3000/api/booking/update/${bookingId}`,
         { status: newStatus },
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -323,7 +323,7 @@ const AdminDashboard = () => {
             Properties
           </h2>
           <div className="grid md:grid-cols-2 gap-5 mb-10">
-            {(properties || []).map((property) => (
+            {properties.map((property) => (
               <div
                 key={property._id}
                 className="bg-white p-4 shadow rounded border"
@@ -363,7 +363,7 @@ const AdminDashboard = () => {
             Bookings
           </h2>
           <div className="grid md:grid-cols-2 gap-5">
-            {(bookings || []).map((booking) => (
+            {bookings.map((booking) => (
               <div
                 key={booking._id}
                 className="bg-white p-4 shadow rounded border"
@@ -393,7 +393,7 @@ const AdminDashboard = () => {
             Agents
           </h2>
           <div className="bg-white p-4 shadow rounded border">
-            {(agents || []).map((agent) => (
+            {agents.map((agent) => (
               <div key={agent._id}>
                 <p>{agent.name} - {agent.email}</p>
                 <button onClick={() => handleDelete(agent._id)}>Delete</button>

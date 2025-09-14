@@ -16,7 +16,7 @@ const Success = () => {
     //mark booking as paid in backend
     axios
       .post(
-        "https://red1-1-0-0.onrender.com/api/booking/success",
+        "http://localhost:3000/api/booking/success",
         {},
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -31,10 +31,12 @@ const Success = () => {
   }, [user, navigate]);
 
   return (
-    <div className="p-5 text-center">
-      <h1 className="text-3xl font-bold text-green-600">Payment Successfull</h1>
-      <p className="mt-2">Your Booking has placed successfully...</p>
-      <p className="mt-2">Redirecting to bookings....</p>
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4 py-10">
+      <div className="bg-white shadow-lg rounded-lg p-8 max-w-md w-full text-center">
+        <h1 className="text-2xl sm:text-3xl font-bold text-green-600 mb-4">Payment Successful</h1>
+        <p className="mt-2 text-gray-700">Your booking has been placed successfully.</p>
+        <p className="mt-2 text-gray-500">Redirecting to bookings...</p>
+      </div>
     </div>
   );
 };

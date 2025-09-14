@@ -1,6 +1,7 @@
 import { useContext, useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Context/AuthContext";
+import { FaShoppingCart, FaRegCalendarAlt } from "react-icons/fa";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
@@ -54,23 +55,23 @@ const Navbar = () => {
   }, []);
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50 h-16 flex items-center px-6">
-      <div className="flex justify-between items-center w-full">
+    <nav className="fixed top-0 left-0 w-full bg-white shadow-md z-50 h-16 flex items-center px-2 sm:px-4 md:px-6">
+      <div className="flex justify-between items-center w-full max-w-7xl mx-auto">
         {/* Logo */}
         <Link
           to="/"
-          className="text-xl font-bold text-blue-600 flex items-center gap-2"
+          className="text-lg sm:text-xl font-bold text-blue-600 flex items-center gap-2"
         >
           <span role="img" aria-label="house">
             🏠
           </span>{" "}
-          RED-1
+          REAL ESTATE
         </Link>
 
         {/* Hamburger button (mobile) */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-gray-700 focus:outline-none"
+          className="md:hidden text-gray-700 focus:outline-none ml-2"
           aria-label="Toggle menu"
         >
           {isOpen ? "✖" : "☰"}
@@ -78,9 +79,9 @@ const Navbar = () => {
 
         {/* Menu items */}
         <div
-          className={`${
+          className={`$${
             isOpen ? "block space-y-3 mt-4" : "hidden"
-          } md:flex md:space-x-6 md:space-y-0 items-center text-gray-700 font-medium`}
+          } md:flex md:space-x-6 md:space-y-0 items-center text-gray-700 font-medium bg-white md:bg-transparent absolute md:static top-16 left-0 w-full md:w-auto px-4 md:px-0 py-4 md:py-0 shadow md:shadow-none z-40`}
         >
           <Link to="/" className="hover:text-blue-600 transition duration-300">
             Home
@@ -113,9 +114,17 @@ const Navbar = () => {
             <>
               <Link
                 to="/cart"
-                className="hover:text-blue-600 transition duration-300"
+                className="hover:text-blue-600 transition duration-300 flex items-center gap-1"
               >
-                Cart
+                <FaShoppingCart style={{ fontSize: '1.2em', lineHeight: 1 }} />
+                <span>Cart</span>
+              </Link>
+              <Link
+                to="/booking"
+                className="hover:text-blue-600 transition duration-300 flex items-center gap-1"
+              >
+                <FaRegCalendarAlt style={{ fontSize: '1.2em', lineHeight: 1 }} />
+                <span>Booking</span>
               </Link>
               <Link
                 to="/appointments"
@@ -128,12 +137,12 @@ const Navbar = () => {
 
           {/* Auth Buttons / Profile Dropdown */}
           {user ? (
-            <div className="flex items-center space-x-4 relative">
+            <div className="flex items-center space-x-2 sm:space-x-4 relative mt-2 md:mt-0">
               {/* Notifications */}
               <div className="relative" ref={notifRef}>
                 <button
                   onClick={() => setNotifOpen(!notifOpen)}
-                  className="relative text-gray-600 hover:text-blue-600 focus:outline-none"
+                  className="relative text-gray-600 hover:text-blue-600 focus:outline-none text-xl"
                   aria-label="Notifications"
                 >
                   🔔
@@ -146,7 +155,7 @@ const Navbar = () => {
 
                 {/* Notification Dropdown */}
                 {notifOpen && (
-                  <div className="absolute right-12 mt-2 w-64 bg-white rounded-md shadow-lg z-50 py-2 border">
+                  <div className="absolute right-0 md:right-12 mt-2 w-64 bg-white rounded-md shadow-lg z-50 py-2 border">
                     <p className="px-4 py-2 text-sm font-semibold text-gray-700 border-b">
                       Notifications
                     </p>
@@ -170,16 +179,16 @@ const Navbar = () => {
 
               {/* Avatar Dropdown */}
               <div
-                className="relative inline-block text-left"
-                ref={dropdownRef}
-              >
-                <button
-                  onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-blue-600 text-white font-bold focus:outline-none"
-                  aria-label="User menu"
+                  className="relative inline-block text-left"
+                  ref={dropdownRef}
                 >
-                  {getInitials(user?.name || "User")}
-                </button>
+                  <button
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-blue-600 text-white font-bold focus:outline-none text-base sm:text-lg"
+                    aria-label="User menu"
+                  >
+                    {getInitials(user?.name || "User")}
+                  </button>
 
                 {dropdownOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 py-2 border">

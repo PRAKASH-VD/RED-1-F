@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from "react";
 import PropertyCard from "../Components/PropertyCard";
+import Spinner from "../Components/Spinner";
+import ErrorMessage from "../Components/ErrorMessage";
 
 const PropertyComparison = () => {
   const [properties, setProperties] = useState([]);
   const [selected, setSelected] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("https://red1-1-0-0.onrender.com/api/properties")
+    setError("");
+    fetch("http://localhost:3000/api/properties")
       .then((res) => res.json())
       .then((data) => {
         setProperties(data.data || []);
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Failed to fetch properties", err);
+        setError("Failed to fetch properties.");
         setLoading(false);
       });
   }, []);
@@ -27,7 +31,8 @@ const PropertyComparison = () => {
     );
   };
 
-  if (loading) return <div>Loading properties...</div>;
+  if (loading) return <Spinner />;
+  if (error) return <ErrorMessage message={error} />;
 
   return (
     <div>

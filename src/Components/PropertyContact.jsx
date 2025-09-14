@@ -1,9 +1,10 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
 import { AuthContext } from "../Context/AuthContext";
+import { useToast } from "../Context/ToastContext";
 
 const PropertyContact = ({ propertyId }) => {
   const { user } = useContext(AuthContext);
+  const { showToast } = useToast();
   const [data, setData] = useState({
     name: user?.name || "",
     email: user?.email || "",
@@ -17,18 +18,40 @@ const PropertyContact = ({ propertyId }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("/api/inquiries", {
+      const res = await fetch("http://localhost:3000/api/inquiries", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ propertyId, message, email }),
+        headers: {
+          "Content-Type": "application/json",
+          ...(user?.token ? { Authorization: `Bearer ${user.token}` } : {}),
+        },
+        body: JSON.stringify({
+          property: propertyId,
+          name: data.name,
+          email: data.email,
+          phone: data.phone,
+          message: data.message,
+          preferredDate: data.preferredDate,
+          preferredTime: data.preferredTime,
+        }),
       });
       if (res.ok) {
-        alert("Inquiry sent! You will receive an email confirmation.");
+        showToast("Inquiry sent! You will receive an email confirmation.", "success");
+        setStatus("Inquiry sent! You will receive an email confirmation.");
+        setData({
+          name: user?.name || "",
+          email: user?.email || "",
+          phone: "",
+          message: "",
+          preferredDate: "",
+          preferredTime: "",
+        });
       } else {
-        alert("Failed to send inquiry.");
+        showToast("Failed to send inquiry.", "error");
+        setStatus("Failed to send inquiry.");
       }
-    } catch {
-      alert("Error sending inquiry.");
+    } catch (err) {
+      showToast("Error sending inquiry.", "error");
+      setStatus("Error sending inquiry.");
     }
   };
 

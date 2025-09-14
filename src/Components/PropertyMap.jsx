@@ -7,23 +7,32 @@ import "leaflet/dist/leaflet.css";
 const PropertyMap = ({ properties }) => {
   return (
     <div>
-      {properties.map((property) => (
-        <div key={property._id} className="w-full h-80 rounded overflow-hidden">
-          <MapContainer
-            center={[property.location.lat, property.location.lng]}
-            zoom={13}
-            style={{ height: "100%", width: "100%" }}
-          >
-            <TileLayer
-              attribution='&copy; OpenStreetMap contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            <Marker position={[property.location.lat, property.location.lng]}>
-              <Popup>{property.locationText || "Property Location"}</Popup>
-            </Marker>
-          </MapContainer>
-        </div>
-      ))}
+      {properties
+        .filter(
+          (property) =>
+            property.location &&
+            typeof property.location.lat === "number" &&
+            typeof property.location.lng === "number" &&
+            !isNaN(property.location.lat) &&
+            !isNaN(property.location.lng)
+        )
+        .map((property) => (
+          <div key={property._id} className="w-full h-80 rounded overflow-hidden">
+            <MapContainer
+              center={[property.location.lat, property.location.lng]}
+              zoom={13}
+              style={{ height: "100%", width: "100%" }}
+            >
+              <TileLayer
+                attribution='&copy; OpenStreetMap contributors'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <Marker position={[property.location.lat, property.location.lng]}>
+                <Popup>{property.locationText || "Property Location"}</Popup>
+              </Marker>
+            </MapContainer>
+          </div>
+        ))}
     </div>
   );
 };
