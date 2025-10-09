@@ -1,12 +1,41 @@
-# React + Vite
+# 🚀 RED-1-F
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React + Vite project deployed on Netlify, built with scalability, performance, and clean design in mind.
 
-Currently, two official plugins are available:
+## 🌐 Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 **[View Project on Netlify](https://red-100.netlify.app)**
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 📖 Overview
+
+**RED-1-F** is an ongoing web development project focused on creating a responsive, modern, and user-friendly interface using the latest frontend technologies.  
+This project serves as both a learning journey and a portfolio piece to demonstrate UI/UX design, component-based architecture, and clean coding practices.
+
+---
+
+## 🧩 Features
+
+✅ Built with **React + Vite** for fast and efficient development  
+✅ Styled using **Tailwind CSS** for responsive and modern design  
+✅ Deployed on **Netlify** with continuous deployment support  
+✅ **ESLint** configuration for clean and consistent code  
+✅ Modular file structure for easy scalability  
+
+---
+
+## 🛠️ Tech Stack
+
+| Technology | Description |
+|-------------|-------------|
+| **React JS** | Frontend framework for building dynamic UIs |
+| **Vite** | Fast build tool and development server |
+| **Tailwind CSS** | Utility-first CSS framework for styling |
+| **Netlify** | Hosting and continuous deployment platform |
+| **ESLint** | Code quality and linting tool |
+
+---
+
+## 📁 Folder Structure
+
