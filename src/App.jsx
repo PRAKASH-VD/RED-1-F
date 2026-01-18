@@ -95,12 +95,11 @@ const App = () => {
               path="/messages"
               element={user ? <Messages /> : <Navigate to={"/login"} />}
             />
-            {/* redirect /profile to current user's profile and support /profile/:id */}
             <Route
               path="/profile"
               element={
                 user ? (
-                  <Navigate to={`/profile/${user.id}`} />
+                  <Navigate to={`/profile/${user.data._id}`} />
                 ) : (
                   <Navigate to={"/login"} />
                 )

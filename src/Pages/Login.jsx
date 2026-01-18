@@ -21,7 +21,7 @@ const Login = () => {
     setLoading(true);
     setError("");
     try {
-      const res = await axios.post("https://red1-1-0-0.onrender.com/api/auth/login", {
+      const res = await axios.post("http://localhost:3000/api/auth/login", {
         email,
         password,
       });
@@ -30,7 +30,7 @@ const Login = () => {
       if (!userData.name || !userData.age || !userData.phone) {
         // Try to fetch profile (adjust endpoint as needed)
         try {
-          const profileRes = await axios.get("https://red1-1-0-0.onrender.com/api/auth/profile", {
+          const profileRes = await axios.get("http://localhost:3000/api/auth/profile", {
             headers: { Authorization: `Bearer ${userData.token}` },
           });
           userData = { ...userData, ...profileRes.data };

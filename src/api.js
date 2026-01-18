@@ -1,14 +1,13 @@
-import axios from 'axios';
+import axios from "axios";
 
 const api = axios.create({
-  baseURL: 'https://red1-1-0-0.onrender.com/api',
+  baseURL: "http://localhost:3000/api", 
 });
 
-// Add a request interceptor to include token if available
 api.interceptors.request.use(
   (config) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.token) {
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user?.token) {
       config.headers.Authorization = `Bearer ${user.token}`;
     }
     return config;

@@ -16,7 +16,7 @@ const Home = () => {
   useEffect(() => {
     //fetch properties
     axios
-      .get("https://red1-1-0-0.onrender.com/api/properties/getproperties", { params: filters })
+      .get("http://localhost:3000/api/properties/getproperties", { params: filters })
       .then((res) => setProperties(res.data.data || []))
       .catch((err) => console.log("Unable to retrieve", err));
 
@@ -27,7 +27,7 @@ const Home = () => {
         return;
       }
       axios
-        .get("https://red1-1-0-0.onrender.com/api/cart/view", {
+        .get("http://localhost:3000/api/cart/view", {
           headers: { Authorization: `Bearer ${user.token}` },
         })
         .then((res) => setCartItems(res.data.data.items || []))
@@ -44,7 +44,7 @@ const Home = () => {
     }
     await axios
       .post(
-        "https://red1-1-0-0.onrender.com/api/cart/add",
+        "http://localhost:3000/api/cart/add",
         { propertyId, quantity: 1 },
         {
           headers: { Authorization: `Bearer ${user.token}` },
@@ -60,7 +60,7 @@ const Home = () => {
 
   const removeFromCart = async (propertyId) => {
     await axios
-      .delete(`https://red1-1-0-0.onrender.com/api/cart/remove/${propertyId}`, {
+      .delete(`http://localhost:3000/api/cart/remove/${propertyId}`, {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then(() => {

@@ -1,114 +1,46 @@
-import { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../apiBase.js";
-import { AuthContext } from "../Context/AuthContext";
-
+import { useEffect, useState } from "react";
+import api from "../api";
 
 const AgentAppointments = () => {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate();
   const [appointments, setAppointments] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchAppointments = async () => {
-      try {
-        const { data } = await api.get(
-          "/appointments/agent/my",
-          {
-            headers: { Authorization: `Bearer ${user?.token}` },
-          }
-        );
-        setAppointments(data.data || []);
-      } catch (error) {
-        console.error("Error fetching agent appointments:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    api.get("/appointments/agent/my")
+      .then(res => setAppointments(res.data.data || []));
+  }, []);
 
-    if (!user) {
-      setLoading(false);
-      navigate("/login");
-      return;
-    }
-
-    if (user?.role?.toLowerCase() !== "agent") {
-      setLoading(false);
-      navigate("/");
-      return;
-    }
-
-    fetchAppointments();
-  }, [user, navigate]);
-
-  async function sendBookingEmail(booking) {
-    try {
-      if (!booking) throw new Error("sendBookingEmail called without booking");
-
-      const propertyId = booking.propertyId || booking.property?._id;
-      const recipient = booking.user?.email;
-      if (!recipient) throw new Error("Booking has no recipient email");
-
-      const html = `<p>Your booking for property ${propertyId} was received.</p>`;
-      await transporter.sendMail({
-        to: recipient,
-        subject: "Booking confirmation",
-        html
-      });
-
-      console.log("✅ Email sent successfully");
-    } catch (err) {
-      console.error("Email sending failed:", err?.message || err);
-    }
-  }
-
-  if (loading) return <p className="text-center py-6">Loading...</p>;
-
-  if (!appointments.length)
-    return <p className="text-center py-6">No appointments assigned yet.</p>;
+  const update = async (id, status) => {
+    await api.put(`/appointments/agent/${id}`, { status });
+    setAppointments(a =>
+      a.map(x => x._id === id ? { ...x, status } : x)
+    );
+  };
 
   return (
     <div className="max-w-5xl mx-auto p-6">
-      <h2 className="text-2xl font-bold text-blue-600 mb-4">
-        My Appointments (Agent)
-      </h2>
+      <h2 className="text-xl font-bold mb-4">Agent Appointments</h2>
 
-      <div className="grid gap-4">
-        {appointments.map((appt) => (
-          <div
-            key={appt._id}
-            className="border rounded-lg p-4 shadow hover:shadow-md transition"
-          >
-            <h3 className="text-lg font-semibold text-gray-800">
-              Property: {appt.property?.title || "N/A"}
-            </h3>
-            <p className="text-gray-600">
-              <span className="font-medium">Customer:</span>{" "}
-              {appt.user?.name} ({appt.user?.email})
-            </p>
-            <p className="text-gray-600">
-              <span className="font-medium">Date:</span>{" "}
-              {new Date(appt.scheduledAt).toLocaleString()}
-            </p>
-              <p className="text-gray-600">
-              <span className="font-medium">Notes:</span>{" "}
-              {appt.notes || "N/A"}
-            </p>
-            <p
-              className={`mt-2 font-medium ${
-                appt.status === "Approved"
-                  ? "text-green-600"
-                  : appt.status === "Cancelled"
-                  ? "text-red-600"
-                  : "text-yellow-600"
-              }`}
+      {appointments.map(a => (
+        <div key={a._id} className="border p-4 rounded mb-3">
+          <div><b>Customer:</b> {a.user?.name}</div>
+          <div><b>Property:</b> {a.property?.name}</div>
+
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => update(a._id, "Approved")}
+              className="px-3 py-1 bg-green-600 text-white rounded"
             >
-              Status: {appt.status}
-            </p>
+              Approve
+            </button>
+            <button
+              onClick={() => update(a._id, "Cancelled")}
+              className="px-3 py-1 bg-red-600 text-white rounded"
+            >
+              Cancel
+            </button>
           </div>
-        ))}
-      </div>
+        </div>
+      ))}
     </div>
   );
 };
