@@ -29,7 +29,7 @@ const CreateAppointment = ({ propertyId }) => {
       });
 
       showToast("Appointment booked successfully", "success");
-      navigate("/appointments"); // go to My Appointments
+      navigate("/appointments"); 
     } catch (error) {
       console.error(error);
       showToast("Failed to book appointment", "error");

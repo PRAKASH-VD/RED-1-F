@@ -85,9 +85,11 @@ const Navbar = () => {
                 Booking
               </Link>
 
-              <Link to="/appointments/my">Appointments</Link>
+              <Link to="/appointments">Appointment's</Link>
             </>
           )}
+
+          
 
           {user ? (
             <div ref={dropdownRef} className="relative">
