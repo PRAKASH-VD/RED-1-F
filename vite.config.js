@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://red1-1-0-0.onrender.com',
+        target: 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
       },

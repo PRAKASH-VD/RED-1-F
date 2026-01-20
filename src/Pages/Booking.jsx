@@ -19,7 +19,7 @@ const Booking = () => {
       return;
     }
     axios
-      .get("https://red1-1-0-0.onrender.com/api/booking/mybookings", {
+      .get("http://localhost:3000/api/booking/mybookings", {
         headers: { Authorization: `Bearer ${user.token}` },
       })
       .then((res) => {
@@ -50,7 +50,7 @@ const Booking = () => {
     }
     await axios
       .post(
-        "https://red1-1-0-0.onrender.com/api/payments/checkout",
+        "http://localhost:3000/api/payments/checkout",
         {
           items: allItems,
           amount: totalAmount,

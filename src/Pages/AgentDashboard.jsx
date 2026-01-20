@@ -28,23 +28,23 @@ const AgentDashboard = () => {
 
   const save = async () => {
     if (editId) {
-      const { data } = await axios.put(`https://red1-1-0-0.onrender.com/api/properties/update/${editId}`, form, { headers });
+      const { data } = await axios.put(`http://localhost:3000/api/properties/update/${editId}`, form, { headers });
       setMine(mine.map(m => m._id === editId ? data.data : m));
       setEditId(null); setForm(empty);
     } else {
-      const { data } = await axios.post("https://red1-1-0-0.onrender.com/api/properties/create", form, { headers });
+      const { data } = await axios.post("http://localhost:3000/api/properties/create", form, { headers });
       setMine([...mine, data.data || data]);
       setForm(empty);
     }
   };
 
   const del = async (id) => {
-    await axios.delete(`https://red1-1-0-0.onrender.com/api/properties/delete/${id}`, { headers });
+    await axios.delete(`http://localhost:3000/api/properties/delete/${id}`, { headers });
     setMine(mine.filter(m => m._id !== id));
   };
 
   const confirmAppointment = async (id, status) => {
-    await axios.put(`https://red1-1-0-0.onrender.com/api/appointments/${id}`, { status }, { headers });
+    await axios.put(`http://localhost:3000/api/appointments/${id}`, { status }, { headers });
     setAppointments(appointments.map(a => a._id === id ? { ...a, status } : a));
   };
 

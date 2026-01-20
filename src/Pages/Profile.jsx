@@ -68,7 +68,7 @@ const Profile = () => {
         <img
           src={
             user?.data?.avatar
-              ? `https://red1-1-0-0.onrender.com${user.data.avatar}`
+              ? `http://localhost:3000${user.data.avatar}`
               : "/default-avatar.png"
           }
           alt="avatar"

@@ -21,7 +21,7 @@ const ResetPassword = () => {
     setError("");
     setLoading(true);
     try {
-      await axios.post(`https://red1-1-0-0.onrender.com/api/auth/reset-password/${id}/${token}`, {
+      await axios.post(`http://localhost:3000/api/auth/reset-password/${id}/${token}`, {
         password,
       });
       setMessage("Password reset successful! You can now login.");

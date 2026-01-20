@@ -33,7 +33,7 @@ const Cart = () => {
     if (!item || item.quantity + change < 1) return;
 
     await axios.put(
-      `https://red1-1-0-0.onrender.com/api/cart/update/${propertyId}`,
+      `http://localhost:3000/api/cart/update/${propertyId}`,
       { change }
     );
 
@@ -43,7 +43,7 @@ const Cart = () => {
 
   const removeFromCart = async (propertyId) => {
     await axios.delete(
-      `https://red1-1-0-0.onrender.com/api/cart/remove/${propertyId}`
+      `http://localhost:3000/api/cart/remove/${propertyId}`
     );
 
     fetchCart();
@@ -54,7 +54,7 @@ const Cart = () => {
     if (cart.length === 0) return;
 
     await axios.post(
-      "https://red1-1-0-0.onrender.com/api/booking/create",
+      "http://localhost:3000/api/booking/create",
       { cartItems: cart }
     );
 
